@@ -1,0 +1,6 @@
+.DS_Store
+.htaccess
+Thumbs.db
+app/storage/sessions/
+*.log
+/vendor/

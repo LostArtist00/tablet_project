@@ -1,0 +1,89 @@
+:root {
+    --bg: #0f1419;
+    --bg-soft: #151d25;
+    --surface: #192028;
+    --surface-2: #202a34;
+    --text: #a8b2c1;
+    --text-strong: #eef4ff;
+    --accent: #4a9a8e;
+    --accent-strong: #68c6b7;
+    --border: rgba(255, 255, 255, 0.08);
+    --shadow: 0 20px 45px rgba(0, 0, 0, 0.22);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+main {
+    padding-top: 88px;
+}
+
+.container {
+    width: min(1120px, calc(100% - 2rem));
+    margin: 0 auto;
+}
+
+.site-header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 20;
+    backdrop-filter: blur(16px);
+    background: rgba(15, 20, 25, 0.82);
+    border-bottom: 1px solid var(--border);
+}
+
+.site-header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+}
+
+.logo {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.site-header nav {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.site-header nav a:hover {
+    color: var(--accent-strong);
+}
+
+.site-footer {
+    padding: 2rem 0;
+    border-top: 1px solid var(--border);
+    margin-top: 4rem;
+}
+
+.site-footer p {
+    margin: 0;
+    text-align: center;
+    font-size: 0.875rem;
+}

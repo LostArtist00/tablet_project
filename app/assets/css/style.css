@@ -22,7 +22,9 @@ html {
 body {
     margin: 0;
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--bg);
+    background:
+        radial-gradient(circle at top, rgba(74, 154, 142, 0.15), transparent 30%),
+        linear-gradient(180deg, var(--bg) 0%, #0b1014 100%);
     color: var(--text);
     min-height: 100vh;
 }
@@ -152,8 +154,14 @@ main {
 .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1.25rem;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
 }
 
 .card h3 {
@@ -174,8 +182,22 @@ main {
 }
 
 .hero {
-    padding: 4rem 0;
+    padding: 5rem 0 4rem;
     text-align: center;
+}
+
+.hero .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    text-align: left;
 }
 
 .hero h1 {
@@ -310,4 +332,57 @@ tr:hover {
 .badge.partially_working {
     background: #f39c12;
     color: white;
+}
+
+.hero-card {
+    background: var(--surface-2);
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid var(--border);
+}
+
+.surface-image {
+    background: var(--bg-soft);
+    border-radius: 8px;
+    padding: 3rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: var(--text);
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+}
+
+.panel h2 {
+    margin-top: 0;
+    color: var(--text-strong);
+}
+
+fieldset {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 0.5rem 0;
+}
+
+fieldset legend {
+    font-weight: 500;
+    padding: 0 0.5rem;
 }

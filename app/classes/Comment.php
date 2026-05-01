@@ -22,6 +22,18 @@ class Comment
         return $stmt->fetchAll();
     }
 
+    public function all(): array
+    {
+        $stmt = $this->pdo->query('
+            SELECT c.*, t.name as tablet_name, b.name as brand_name
+            FROM comments c
+            JOIN tablets t ON c.tablet_id = t.id
+            JOIN brands b ON t.brand_id = b.id
+            ORDER BY c.created_at DESC
+        ');
+        return $stmt->fetchAll();
+    }
+
     public function create(array $data): int
     {
         $stmt = $this->pdo->prepare('

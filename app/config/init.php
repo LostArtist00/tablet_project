@@ -15,8 +15,8 @@ session_save_path($sessionPath);
 session_start();
 
 define('APP_ROOT', dirname(__DIR__, 2));
-define('APP_PATH', dirname(__DIR__, 2));
-define('BASE_URL', '/tablet_project/tablet_project');
+define('APP_PATH', dirname(__DIR__, 1));
+define('BASE_URL', '/' . basename(dirname(__DIR__, 2)) . '/tablet_project');
 define('ASSET_PATH', BASE_URL . '/app/assets');
 
 $dbConfig = [

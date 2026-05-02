@@ -6,13 +6,13 @@ function renderFooter(): void
 {
     ?>
     </main>
+    <button class="back-to-top" type="button" data-back-to-top aria-label="Back to top">↑</button>
     <footer class="site-footer">
-        <div class="container">
-            <p>&copy; <?= date('Y') ?> Tablet Survey. All rights reserved.</p>
-            <a href="<?= e(url('admin/login.php')) ?>" style="font-size:0.8rem;">Admin</a>
+        <div class="container footer-shell">
+            <p>Tablet Survey tracks graphics tablet reliability, user reports, and failure trends.</p>
+            <a href="<?= e(url('admin/login.php')) ?>">Admin</a>
         </div>
     </footer>
-    <button class="back-to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
     <script src="<?= e(asset('js/app.js')) ?>"></script>
 </body>
 </html>

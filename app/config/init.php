@@ -14,8 +14,8 @@ if (!is_dir($sessionPath)) {
 session_save_path($sessionPath);
 session_start();
 
-define('APP_ROOT', dirname(__DIR__, 3));
-define('APP_PATH', dirname(__DIR__, 2));
+define('APP_ROOT', dirname(__DIR__, 2));
+define('APP_PATH', dirname(__DIR__, 1));
 define('BASE_URL', '/' . basename(dirname(__DIR__, 2)) . '/tablet_project');
 define('ASSET_PATH', BASE_URL . '/app/assets');
 

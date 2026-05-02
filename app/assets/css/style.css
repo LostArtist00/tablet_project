@@ -580,6 +580,21 @@ h3 { font-size: 1.25rem; margin: 0 0 0.5rem; }
     margin-top: 0.15rem;
 }
 
+.flash,
+.empty-state {
+    padding: 1rem 1.2rem;
+    margin-bottom: 1rem;
+    border-radius: 18px;
+    border: 1px solid var(--border);
+    background: rgba(74, 154, 142, 0.12);
+}
+
+.flash.error {
+    background: rgba(220, 76, 70, 0.14);
+    border-color: rgba(220, 76, 70, 0.3);
+    color: #ffd4ce;
+}
+
 @keyframes fadeIn {
     to { opacity: 1; }
 }

@@ -55,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 renderHeader('Submit Report', '');
+$flash = flashMessage();
 ?>
 <section class="section">
     <div class="container grid-2">
@@ -65,6 +66,9 @@ renderHeader('Submit Report', '');
         </article>
         
         <article class="panel reveal">
+            <?php if ($flash): ?>
+                <div class="flash"><?= e($flash) ?></div>
+            <?php endif; ?>
             <form method="post" class="report-form">
                 <?= csrfField() ?>
                 

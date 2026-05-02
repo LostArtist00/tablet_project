@@ -113,6 +113,13 @@ function setFlash(string $message, string $type = 'success'): void
     $_SESSION['flash_type'] = $type;
 }
 
+function flashMessage(): string
+{
+    $message = $_SESSION['flash'] ?? '';
+    unset($_SESSION['flash']);
+    return $message;
+}
+
 function isNonEmptyString(mixed $value): bool
 {
     return trim((string) $value) !== '';

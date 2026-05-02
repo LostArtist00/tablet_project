@@ -114,6 +114,19 @@ class FailureReport
         return $stmt->fetchAll();
     }
 
+    public function recentActivity(int $limit = 12): array
+    {
+        $stmt = $this->pdo->query('
+            SELECT MONTH(created_at) as month, COUNT(*) as cnt
+            FROM failure_reports
+            WHERE created_at >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
+            GROUP BY MONTH(created_at)
+            ORDER BY month DESC
+            LIMIT ' . (int) $limit
+        );
+        return $stmt->fetchAll();
+    }
+
     public function byId(int $id): ?array
     {
         $stmt = $this->pdo->prepare('

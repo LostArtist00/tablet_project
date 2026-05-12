@@ -9,58 +9,71 @@ require_once APP_PATH . '/includes/footer.php';
 $tabletModel = new Tablet(db());
 $brandModel = new Brand(db());
 
-$search = $_GET['search'] ?? '';
-$brandId = isset($_GET['brand']) ? (int) $_GET['brand'] : null;
-
-if ($search || $brandId) {
-    $tablets = $tabletModel->search($search, $brandId);
-} else {
-    $tablets = $tabletModel->all();
-}
-
+$tablets = $tabletModel->all();
 $brands = $brandModel->all();
 
 renderHeader('Browse Tablets', '');
 ?>
 <section class="section">
     <div class="container">
-        <h1>Browse Tablets</h1>
-        
-        <form method="get" class="search-form">
-            <div class="form-row">
-                <div class="form-group">
-                    <input type="text" name="search" placeholder="Search tablets..." value="<?= e($search) ?>">
-                </div>
-                <div class="form-group">
-                    <select name="brand">
-                        <option value="">All Brands</option>
-                        <?php foreach ($brands as $brand): ?>
-                            <option value="<?= (int) $brand['id'] ?>" <?= $brandId === (int) $brand['id'] ? 'selected' : '' ?>>
-                                <?= e($brand['name']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <button type="submit" class="button">Search</button>
-            </div>
-        </form>
+        <h1>Tablet Database</h1>
+        <p>Browse tablets, compare specs, and check reliability reports.</p>
 
-        <div class="card-grid">
-            <?php if (empty($tablets)): ?>
-                <p>No tablets found.</p>
-            <?php else: ?>
-                <?php foreach ($tablets as $tablet): ?>
-                    <article class="card">
-                        <h3><?= e($tablet['brand_name']) ?> <?= e($tablet['name']) ?></h3>
-                        <div class="meta">
-                            <span class="pill"><?= e($tablet['has_display'] ? 'Display' : 'Pen tablet') ?></span>
-                            <span class="pill"><?= e($tablet['size']) ?></span>
-                        </div>
-                        <p><?= e($tablet['notes'] ?: 'No notes yet.') ?></p>
-                        <a class="button secondary" href="<?= e(url('tablet.php')) ?>?id=<?= (int) $tablet['id'] ?>">View</a>
-                    </article>
-                <?php endforeach; ?>
-            <?php endif; ?>
+        <div class="gallery-filter-bar">
+            <div class="gallery-filter-group">
+                <span class="filter-label">Filter by Brand</span>
+                <div class="filter-options" id="brandFilters">
+                    <?php foreach ($brands as $brand): ?>
+                        <label class="filter-checkbox">
+                            <input type="checkbox" data-filter="brand" value="<?= (int) $brand['id'] ?>" checked>
+                            <?= e($brand['name']) ?>
+                        </label>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="gallery-filter-group">
+                <span class="filter-label">Filter by Type</span>
+                <div class="filter-options" id="typeFilters">
+                    <label class="filter-radio">
+                        <input type="radio" data-filter="type" value="" name="galleryType" checked>
+                        All
+                    </label>
+                    <label class="filter-radio">
+                        <input type="radio" data-filter="type" value="display" name="galleryType">
+                        Display
+                    </label>
+                    <label class="filter-radio">
+                        <input type="radio" data-filter="type" value="graphics" name="galleryType">
+                        Graphics
+                    </label>
+                </div>
+            </div>
+            <div class="gallery-filter-group" style="flex:1;min-width:200px;">
+                <span class="filter-label">Search</span>
+                <input type="search" id="gallerySearch" class="gallery-search" placeholder="Search tablets..." autocomplete="off" style="margin-bottom:0;">
+            </div>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid">
+            <?php foreach ($tablets as $t): ?>
+                <article class="gallery-item visible"
+                    data-brand="<?= (int) $t['brand_id'] ?>"
+                    data-type="<?= $t['has_display'] ? 'display' : 'graphics' ?>"
+                    data-name="<?= e(strtolower($t['brand_name'] . ' ' . $t['name'])) ?>">
+                    <div class="gallery-item-image"><?= e($t['brand_name']) ?> / <?= e($t['name']) ?></div>
+                    <h3><?= e($t['brand_name']) ?> <?= e($t['name']) ?></h3>
+                    <div class="gallery-meta">
+                        <span class="pill"><?= $t['has_display'] ? 'Display' : 'Pen tablet' ?></span>
+                        <span class="pill"><?= e($t['size'] ?: 'N/A') ?></span>
+                    </div>
+                    <div class="gallery-price"><?= $t['price'] ? '$' . e((string) $t['price']) : '' ?></div>
+                    <p class="muted"><?= e($t['notes'] ?: '') ?></p>
+                    <a class="gallery-link" href="<?= e(url('tablet.php')) ?>?id=<?= (int) $t['id'] ?>">View details</a>
+                </article>
+            <?php endforeach; ?>
+            <div class="gallery-empty" style="display:none;">
+                <p>No tablets match your filters.</p>
+            </div>
         </div>
     </div>
 </section>

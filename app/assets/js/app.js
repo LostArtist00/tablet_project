@@ -84,6 +84,48 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    /* ---------- Homepage tm-gallery filtering ---------- */
+    const tmGallery = document.getElementById('tmGalleryItems');
+    const tmSearch = document.getElementById('tmGallerySearch');
+    const tmBrandFilters = document.getElementById('tmBrandFilters');
+
+    function filterTmGallery() {
+        if (!tmGallery) return;
+        const q = tmSearch ? tmSearch.value.trim().toLowerCase() : '';
+        const selectedBrands = [];
+        if (tmBrandFilters) {
+            tmBrandFilters.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                if (cb.checked) selectedBrands.push(cb.value);
+            });
+        }
+        let selectedType = null;
+        document.querySelectorAll('input[name="tmType"]').forEach(r => {
+            if (r.checked) selectedType = r.value;
+        });
+
+        const items = tmGallery.querySelectorAll('.tm-gallery-item');
+        items.forEach(item => {
+            const brand = item.dataset.brand;
+            const type = item.dataset.type;
+            const name = (item.dataset.name || '').toLowerCase();
+
+            const matchBrand = selectedBrands.length === 0 || selectedBrands.includes(brand);
+            const matchType = !selectedType || type === selectedType;
+            const matchSearch = !q || name.includes(q);
+
+            item.style.display = (matchBrand && matchType && matchSearch) ? '' : 'none';
+        });
+    }
+
+    if (tmGallery) {
+        if (tmBrandFilters) {
+            tmBrandFilters.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.addEventListener('change', filterTmGallery));
+        }
+        document.querySelectorAll('input[name="tmType"]').forEach(r => r.addEventListener('change', filterTmGallery));
+        if (tmSearch) tmSearch.addEventListener('input', filterTmGallery);
+        filterTmGallery();
+    }
+
     /* ---------- Gallery live filtering ---------- */
     const galleryGrid = document.getElementById('galleryGrid');
     const gallerySearch = document.getElementById('gallerySearch');

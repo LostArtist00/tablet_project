@@ -15,6 +15,11 @@ function renderHeader(string $title = '', string $extra = ''): void
     <?= $extra ?>
 </head>
 <body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
     <nav>
         <div class="nav-container">
             <div class="logo">Tablet Survey</div>

@@ -15,28 +15,29 @@ function renderHeader(string $title = '', string $extra = ''): void
     <?= $extra ?>
 </head>
 <body>
-    <header class="site-header">
-        <div class="container nav-shell">
-            <a href="<?= e(url()) ?>" class="brandmark">
-                <span class="brandmark-logo">TS</span>
-                <span>
-                    <strong>Tablet Survey</strong>
-                    <small>data dont lie</small>
-                </span>
-            </a>
-            <button class="nav-toggle" type="button" aria-label="Toggle navigation" data-nav-toggle>
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Tablet Survey</div>
+            <div class="nav-links">
+                <a href="<?= e(url('tablets.php')) ?>">Tablets</a>
+                <a href="<?= e(url('about.php')) ?>">About</a>
+                <a href="<?= e(url('report.php')) ?>">Report</a>
+                <a href="<?= e(url('survey.php')) ?>" class="cta-button">Survey</a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
-            <nav class="site-nav" data-nav>
-                <a href="<?= e(url('tablets.php')) ?>">Tablets</a>
-                <a href="<?= e(url('report.php')) ?>">Report</a>
-                <a href="<?= e(url('about.php')) ?>">About</a>
-                <button class="theme-toggle" type="button" data-theme-toggle>Theme</button>
-            </nav>
         </div>
-    </header>
+        <div class="mobile-nav" id="mobileNav">
+            <a href="<?= e(url('tablets.php')) ?>">Tablets</a>
+            <a href="<?= e(url('survey.php')) ?>">Survey</a>
+            <a href="<?= e(url('report.php')) ?>">Report</a>
+            <a href="<?= e(url('about.php')) ?>">About</a>
+            <a href="<?= e(url('survey.php')) ?>" class="cta-button">Survey</a>
+        </div>
+    </nav>
     <main>
     <?php
 }

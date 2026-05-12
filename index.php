@@ -36,7 +36,7 @@ renderHeader('Home', '');
         </div>
         <div class="card-grid">
             <?php foreach ($featured as $tablet): ?>
-                <article class="card reveal">
+                <article class="card">
                     <div class="surface-image"><?= e($tablet['brand_name']) ?> / <?= e($tablet['name']) ?></div>
                     <div class="meta">
                         <span class="pill"><?= e($tablet['has_display'] ? 'Display' : 'Pen tablet') ?></span>
@@ -57,23 +57,16 @@ renderHeader('Home', '');
 
 <section class="section">
     <div class="container grid-2">
-        <article class="panel reveal">
+        <article class="panel">
             <p class="eyebrow">Why Tablet Survey</p>
             <h2>Less hype, more ownership history.</h2>
             <p>Specs matter, but failure patterns matter more. Tablet Survey is built to surface recurring issues like dead zones, worn cables, driver instability, and panel defects in a format that stays easy to browse.</p>
         </article>
-        <article class="panel reveal">
+        <article class="panel">
             <p class="eyebrow">Contribute</p>
             <h2>Share a report in under a minute.</h2>
             <a class="button secondary" href="<?= e(url('report.php')) ?>">Submit Report</a>
         </article>
     </div>
 </section>
-
-<div class="lightbox" data-lightbox>
-    <div class="lightbox-panel card">
-        <h3>Tablet Survey Snapshot</h3>
-        <p data-lightbox-content></p>
-    </div>
-</div>
 <?php renderFooter(); ?>

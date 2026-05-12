@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 renderHeader('Survey', '');
 ?>
 <section class="tm-survey" id="tabletSurvey">
-    <form id="surveyForm" action="<?= e(url('report.php')) ?>" method="post" novalidate>
+        <form id="surveyForm" action="<?= e(url('survey.php')) ?>" method="post" novalidate>
         <?= csrf() ?>
 
         <div class="step-info">

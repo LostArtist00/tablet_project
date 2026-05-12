@@ -142,10 +142,42 @@ document.addEventListener('DOMContentLoaded', function() {
         const prevBtns = surveyForm.querySelectorAll('.prev-btn');
         const surveySearch = document.getElementById('surveySearch');
 
+        function filterSurveyTablets() {
+            const brandRadio = surveyForm.querySelector('input[name="brand_id"]:checked');
+            const typeRadio = surveyForm.querySelector('input[name="has_display"]:checked');
+            const brandId = brandRadio ? brandRadio.value : '';
+            const typeVal = typeRadio ? typeRadio.value : '';
+
+            const tabletList = document.getElementById('surveyTabletList');
+            if (!tabletList) return;
+
+            const items = tabletList.querySelectorAll('.survey-tablet-item');
+            items.forEach(item => {
+                const matchesBrand = !brandId || item.dataset.brand === brandId;
+                const matchesType = !typeVal || item.dataset.type === (typeVal === '1' ? 'display' : 'graphics');
+                item.style.display = matchesBrand && matchesType ? 'flex' : 'none';
+            });
+
+            const searchInput = document.getElementById('surveySearch');
+            if (searchInput) {
+                const q = searchInput.value.trim().toLowerCase();
+                if (q) {
+                    items.forEach(item => {
+                        if (item.style.display !== 'none') {
+                            const text = item.textContent.toLowerCase();
+                            item.style.display = text.includes(q) ? 'flex' : 'none';
+                        }
+                    });
+                }
+            }
+        }
+
         function showStep(num) {
             steps.forEach(s => s.removeAttribute('aria-current'));
             const target = surveyForm.querySelector('.step[data-step="' + num + '"]');
             if (target) target.setAttribute('aria-current', 'step');
+
+            if (num === 3) filterSurveyTablets();
 
             const dots = surveyForm.querySelectorAll('.step-dot');
             dots.forEach((d, i) => {
@@ -157,6 +189,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const curr = parseInt(surveyForm.querySelector('.step[aria-current]').dataset.step);
             showStep(curr + 1);
         }));
+
+        const brandRadios = surveyForm.querySelectorAll('input[name="brand_id"]');
+        brandRadios.forEach(r => r.addEventListener('change', filterSurveyTablets));
+        const typeRadios = surveyForm.querySelectorAll('input[name="has_display"]');
+        typeRadios.forEach(r => r.addEventListener('change', filterSurveyTablets));
 
         prevBtns.forEach(btn => btn.addEventListener('click', function() {
             const curr = parseInt(surveyForm.querySelector('.step[aria-current]').dataset.step);

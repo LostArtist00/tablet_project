@@ -18,28 +18,19 @@ foreach ($featured as $tablet) {
 renderHeader('Home', '');
 ?>
 <section class="hero">
-    <div class="container hero-grid">
-        <div class="reveal">
-            <p class="eyebrow">Reliability Database</p>
-            <h1>Tablet Survey tracks what happens after you buy.</h1>
-            <p>Browse tablet profiles, compare working versus faulty reports, and see how long models actually last.</p>
-            <div class="actions">
-                <a class="button" href="<?= e(url('tablets.php')) ?>">Browse Tablets</a>
-                <a class="button secondary" href="<?= e(url('report.php')) ?>">Submit Report</a>
-            </div>
-            <div class="stats-grid">
-                <article class="stat-card">
-                    <strong><?= count($allTablets) ?></strong>
-                    <span>tracked models</span>
-                </article>
-                <article class="stat-card">
-                    <strong>8</strong>
-                    <span>fault categories</span>
-                </article>
-            </div>
-        </div>
-        <div class="hero-card reveal" data-lightbox-trigger="Tablet Survey compares pen issues, dead zones, driver pain, and long-term survival rates.">
-            Click a tablet card to open its profile
+    <div class="hero-content">
+        <h1>Help us improve the statistics</h1>
+        <p class="hero-subtitle">Fill out this simple survey about your experience with a tablet.</p>
+        <a href="<?= e(url('survey.php')) ?>" class="cta-button" style="font-size: 1.1rem; padding: 0.75rem 2rem;">Take the Survey</a>
+        <div class="stats-grid">
+            <article class="stat-card">
+                <strong><?= count($allTablets) ?></strong>
+                <span>tracked models</span>
+            </article>
+            <article class="stat-card">
+                <strong>8</strong>
+                <span>fault categories</span>
+            </article>
         </div>
     </div>
 </section>

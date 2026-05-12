@@ -20,13 +20,14 @@ function renderHeader(string $title = '', string $extra = ''): void
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
+
     <nav>
         <div class="nav-container">
             <div class="logo">Tablet Survey</div>
             <div class="nav-links">
                 <a href="<?= e(url('tablets.php')) ?>">Tablets</a>
                 <a href="<?= e(url('about.php')) ?>">About</a>
-                <a href="<?= e(url('report.php')) ?>">Report</a>
+                <a href="<?= e(url('report.php')) ?>">Profile</a>
                 <a href="<?= e(url('survey.php')) ?>" class="cta-button">Survey</a>
             </div>
             <button class="mobile-menu-toggle" id="mobileMenuToggle">
@@ -36,10 +37,10 @@ function renderHeader(string $title = '', string $extra = ''): void
             </button>
         </div>
         <div class="mobile-nav" id="mobileNav">
-            <a href="<?= e(url('tablets.php')) ?>">Tablets</a>
-            <a href="<?= e(url('survey.php')) ?>">Survey</a>
-            <a href="<?= e(url('report.php')) ?>">Report</a>
+            <a href="<?= e(url('tablets.php')) ?>">Features</a>
+            <a href="<?= e(url('tablets.php')) ?>">Pricing</a>
             <a href="<?= e(url('about.php')) ?>">About</a>
+            <a href="<?= e(url('report.php')) ?>">Contact</a>
             <a href="<?= e(url('survey.php')) ?>" class="cta-button">Survey</a>
         </div>
     </nav>

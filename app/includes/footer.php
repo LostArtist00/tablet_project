@@ -16,13 +16,13 @@ function renderFooter(): void
                 </div>
                 <div class="footer-links">
                     <div class="footer-column">
-                        <h4>Browse</h4>
+                        <h4>Product</h4>
                         <a href="<?= e(url('tablets.php')) ?>">Tablets</a>
                         <a href="<?= e(url('survey.php')) ?>">Survey</a>
                         <a href="<?= e(url('report.php')) ?>">Report</a>
                     </div>
                     <div class="footer-column">
-                        <h4>Info</h4>
+                        <h4>Company</h4>
                         <a href="<?= e(url('about.php')) ?>">About</a>
                         <a href="<?= e(url('admin/login.php')) ?>">Admin</a>
                     </div>
@@ -33,7 +33,12 @@ function renderFooter(): void
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2025 Tablet Survey. All rights reserved.</p>
+                <p>&copy; 2025 Tablet Survey. All rights reserved. | Designed by <a href="https://www.tooplate.com" target="_blank" rel="nofollow noopener">Tooplate</a></p>
+                <div class="social-links">
+                    <a href="#">Twitter</a>
+                    <a href="#">LinkedIn</a>
+                    <a href="#">GitHub</a>
+                </div>
             </div>
         </div>
     </footer>

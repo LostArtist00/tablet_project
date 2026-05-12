@@ -21,17 +21,7 @@ renderHeader('Home', '');
     <div class="hero-content">
         <h1>Help us improve the statistics</h1>
         <p class="hero-subtitle">Fill out this simple survey about your experience with a tablet.</p>
-        <a href="<?= e(url('survey.php')) ?>" class="cta-button" style="font-size: 1.1rem; padding: 0.75rem 2rem;">Take the Survey</a>
-        <div class="stats-grid">
-            <article class="stat-card">
-                <strong><?= count($allTablets) ?></strong>
-                <span>tracked models</span>
-            </article>
-            <article class="stat-card">
-                <strong>8</strong>
-                <span>fault categories</span>
-            </article>
-        </div>
+        <a href="<?= e(url('survey.php')) ?>" class="cta-button" style="font-size: 1.1rem; padding: 0.75rem 2rem;">Survey</a>
     </div>
 </section>
 

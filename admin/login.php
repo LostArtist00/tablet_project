@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../../app/config/init.php';
+require_once __DIR__ . '/../app/config/init.php';
 
 $auth = new Auth(db());
 
@@ -10,18 +10,16 @@ if ($auth->check()) {
     redirect('admin/index.php');
 }
 
+$error = null;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     requireCsrfToken();
-    
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
-    
-    if ($auth->attempt($username, $password)) {
-        setFlash('Welcome back!');
+
+    if ($auth->attempt((string) ($_POST['username'] ?? ''), (string) ($_POST['password'] ?? ''))) {
         redirect('admin/index.php');
-    } else {
-        setFlash('Invalid credentials.', 'error');
     }
+
+    $error = 'Invalid admin credentials.';
 }
 ?>
 <!DOCTYPE html>
@@ -29,33 +27,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
+    <title>Admin Login | Tablet Survey</title>
     <link rel="stylesheet" href="<?= e(asset('css/style.css')) ?>">
-    <style>
-        body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .login-box { width: 100%; max-width: 360px; }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="card login-box">
-            <h1>Admin Login</h1>
-            <?php if (isset($_SESSION['flash'])): ?>
-                <p class="form-error"><?= e($_SESSION['flash']) ?></p>
+    <div class="login-shell">
+        <form method="post" class="form-card" style="width:min(460px,100%);">
+            <?= csrfField() ?>
+            <p class="eyebrow">Admin Login</p>
+            <h1>Manage Tablet Survey</h1>
+            <?php if ($error): ?>
+                <div class="flash"><?= e($error) ?></div>
             <?php endif; ?>
-            <form method="post">
-                <?= csrfField() ?>
-                <div class="form-group">
-                    <label>Username</label>
-                    <input type="text" name="username" required autofocus>
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" required>
-                </div>
-                <button type="submit" class="button">Login</button>
-            </form>
-        </div>
+            <label>
+                Username
+                <input type="text" name="username" required />
+            </label>
+            <label>
+                Password
+                <input type="password" name="password" required />
+            </label>
+            <div class="actions" style="margin-top:1rem;">
+                <button type="submit">Login</button>
+                <a class="button secondary" href="<?= e(url()) ?>">Back to site</a>
+            </div>
+        </form>
     </div>
 </body>
 </html>

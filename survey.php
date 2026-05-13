@@ -30,10 +30,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'issues' => $issues,
     ];
     if ($data['tablet_id'] && $report->create($data)) {
-        flash('success', 'Thank you for completing the survey!');
-        redirect(url('tablets.php'));
+        setFlash('Thank you for completing the survey!', 'success');
+        redirect('tablets.php');
     } else {
-        flash('error', 'Please select a tablet.');
+        setFlash('Please select a tablet.', 'error');
     }
 }
 
@@ -41,7 +41,7 @@ renderHeader('Survey', '');
 ?>
 <section class="tm-survey" id="tabletSurvey">
         <form id="surveyForm" action="<?= e(url('survey.php')) ?>" method="post" novalidate>
-        <?= csrf() ?>
+        <?= csrfField() ?>
 
         <div class="step-info">
             <span class="step-dot active"></span>

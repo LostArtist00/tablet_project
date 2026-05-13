@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/app/config/init.php';
+require_once __DIR__ . '/../../app/config/init.php';
 require_once APP_PATH . '/includes/admin.php';
 
 $auth = new Auth(db());
@@ -28,6 +28,7 @@ renderAdminHeader('Tablets');
     <table>
         <thead>
             <tr>
+                <th>Image</th>
                 <th>ID</th>
                 <th>Brand</th>
                 <th>Model</th>
@@ -40,6 +41,13 @@ renderAdminHeader('Tablets');
         <tbody>
             <?php foreach ($tablets as $tablet): ?>
                 <tr>
+                    <td>
+                        <?php if ($tablet['image_path']): ?>
+                            <img src="<?= e(uploadUrl($tablet['image_path'])) ?>" alt="" style="width:60px;height:45px;object-fit:cover;border-radius:6px;border:1px solid var(--border);">
+                        <?php else: ?>
+                            <span style="color:var(--text);opacity:0.4;font-size:0.8rem;">none</span>
+                        <?php endif; ?>
+                    </td>
                     <td><?= (int) $tablet['id'] ?></td>
                     <td><?= e($tablet['brand_name']) ?></td>
                     <td><?= e($tablet['name']) ?></td>

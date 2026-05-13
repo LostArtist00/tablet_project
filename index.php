@@ -7,233 +7,115 @@ require_once APP_PATH . '/includes/header.php';
 require_once APP_PATH . '/includes/footer.php';
 
 $tabletModel = new Tablet(db());
-$brandModel = new Brand(db());
-$reportModel = new FailureReport(db());
+$featured = $tabletModel->featured();
+$allTablets = $tabletModel->all();
+$featuredStats = [];
 
-$tablets = $tabletModel->all();
-$brands = $brandModel->all();
-$recentReports = $reportModel->recent(5);
-$totalTablets = $tabletModel->count();
-$totalBrands = $brandModel->count();
-$totalReports = (int) ($reportModel->summary()['total'] ?? 0);
+foreach ($featured as $tablet) {
+    $featuredStats[(int) $tablet['id']] = $tabletModel->stats((int) $tablet['id']);
+}
 
 renderHeader('Home', '');
 ?>
 <section class="hero">
-    <div class="hero-content">
-        <h1>Help us improve the statistics</h1>
-        <p class="hero-subtitle">Fill out this simple survey about your experience with a tablet.</p>
-        <a href="<?= e(url('survey.php')) ?>" class="cta-button" style="font-size: 1.1rem; padding: 0.75rem 2rem;">Survey</a>
-    </div>
-</section>
-
-<section class="features" id="features">
-    <div class="features-container">
-
-        <section class="tm-gallery" id="tabletGallery">
-            <div class="search-bar">
-                <h1>Tablet database</h1>
-                <input type="search" id="tmGallerySearch" placeholder="Search tablets…" autocomplete="off">
+    <div class="container hero-grid">
+        <div class="reveal">
+            <p class="eyebrow">Reliability Database</p>
+            <h1>Tablet Survey tracks what happens after you buy the tablet.</h1>
+            <p>Browse tablet profiles, compare working versus faulty reports, and see how long models actually last. Data dont lie.</p>
+            <div class="actions">
+                <a class="button" href="<?= e(url('tablets.php')) ?>">Browse Tablets</a>
+                <a class="button secondary" href="<?= e(url('report.php')) ?>">Submit Report</a>
             </div>
-            <div class="filter-bar">
-                <h3 class="filter-title">Filter by Brand</h3>
-                <div class="brand-filters filters" id="tmBrandFilters">
-                    <?php foreach ($brands as $brand): ?>
-                        <label class="filter-btn">
-                            <input type="checkbox" name="brand" value="<?= (int) $brand['id'] ?>" checked> <?= e($brand['name']) ?>
-                        </label>
-                    <?php endforeach; ?>
-                </div>
-
-                <h3 class="filter-title">Filter by Type</h3>
-                <div class="type-filters filters">
-                    <label class="filter-btn">
-                        <input type="radio" name="tmType" value="" checked> All
-                    </label>
-                    <label class="filter-btn">
-                        <input type="radio" name="tmType" value="display"> Tablet Display
-                    </label>
-                    <label class="filter-btn">
-                        <input type="radio" name="tmType" value="graphics"> Graphics Tablet
-                    </label>
-                </div>
+            <div class="stats-grid">
+                <article class="stat-card">
+                    <strong><?= count($allTablets) ?></strong>
+                    <span>tracked models</span>
+                </article>
+                <article class="stat-card">
+                    <strong>8</strong>
+                    <span>fault categories</span>
+                </article>
+                <article class="stat-card">
+                    <strong>Profiles</strong>
+                    <span>click any tablet for details</span>
+                </article>
+                <article class="stat-card">
+                    <strong>Reports</strong>
+                    <span>working and fault data</span>
+                </article>
             </div>
-
-            <div class="tm-gallery-page" id="tmGalleryItems">
-                <?php foreach ($tablets as $t): ?>
-                    <article class="tm-gallery-item" data-brand="<?= (int) $t['brand_id'] ?>" data-type="<?= $t['has_display'] ? 'display' : 'graphics' ?>" data-name="<?= e(strtolower($t['brand_name'] . ' ' . $t['name'])) ?>">
-                        <figure>
-                            <div class="tm-gallery-img" style="background:rgba(15,23,42,0.5);padding:3rem 1rem;text-align:center;color:var(--text-secondary);"><?= e($t['brand_name']) ?> / <?= e($t['name']) ?></div>
-                        </figure>
-                        <h4 class="tm-gallery-title"><?= e($t['brand_name']) ?> <?= e($t['name']) ?></h4>
-                        <p class="tm-gallery-description"><?= e($t['notes'] ?: '') ?></p>
-                        <span class="tm-gallery-price"><?= $t['price'] ? '$' . e((string) $t['price']) : '' ?></span>
-                    </article>
+        </div>
+        <div class="hero-card hero-card--home reveal">
+            <div class="surface-image" data-lightbox-trigger="Tablet Survey compares pen issues, dead zones, driver pain, and long-term survival rates.">
+                Click a tablet card to open its profile
+            </div>
+            <div class="meta">
+                <?php foreach (array_slice($allTablets, 0, 4) as $t): ?>
+                    <span class="pill"><?= e($t['brand_name']) ?></span>
                 <?php endforeach; ?>
             </div>
-        </section>
-
-        <div class="features-layout">
-            <div class="features-two-col">
-                <div class="feature-card-large">
-                    <div class="feature-icon">📊</div>
-                    <h3>Community-Powered Reports</h3>
-                    <p>Every report helps build a clearer picture of tablet reliability. See failure trends, average lifespan, and common issues across brands and models.</p>
-                    <ul class="feature-checklist">
-                        <li>Real-world failure statistics</li>
-                        <li>Per-model reliability data</li>
-                        <li>Issue frequency tracking</li>
-                    </ul>
-                </div>
-                <div class="feature-card-large">
-                    <div class="feature-icon">🔍</div>
-                    <h3>Detailed Model Database</h3>
-                    <p>Browse a comprehensive catalog of graphics and display tablets. Compare specs, check user feedback, and make informed decisions.</p>
-                    <ul class="feature-checklist">
-                        <li>Full spec comparisons</li>
-                        <li>User-submitted feedback</li>
-                        <li>Report history per device</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="features-four-col">
-                <div class="feature-card-small">
-                    <div class="feature-icon-small">🚀</div>
-                    <h4>Quick Survey</h4>
-                    <p>Submit a report in under a minute with our step-by-step form.</p>
-                </div>
-                <div class="feature-card-small">
-                    <div class="feature-icon-small">📈</div>
-                    <h4>Live Statistics</h4>
-                    <p>Track failure rates and trends across the community.</p>
-                </div>
-                <div class="feature-card-small">
-                    <div class="feature-icon-small">🔄</div>
-                    <h4>Multi-Brand</h4>
-                    <p>Wacom, Huion, XP-Pen and more — all in one place.</p>
-                </div>
-                <div class="feature-card-small">
-                    <div class="feature-icon-small">🌐</div>
-                    <h4>Open Data</h4>
-                    <p>All reports are publicly accessible for research.</p>
-                </div>
-            </div>
+            <p class="muted">Each tablet gets its own profile page with model info, report counts, comments, and separate lifespan averages for working units and faulty ones.</p>
         </div>
     </div>
 </section>
 
-<section class="pricing" id="pricing">
-    <div class="pricing-header">
-        <h2>Tablet Survey in Numbers</h2>
-        <p class="hero-subtitle">Real data from the community to help you understand tablet reliability.</p>
-    </div>
-
-    <div class="pricing-cards">
-        <div class="pricing-card">
-            <h3 class="plan-name"><?= $totalBrands ?></h3>
-            <div class="plan-price" style="font-size:1rem;font-weight:normal;"><span>Brands Tracked</span></div>
-            <ul class="plan-features">
-                <li>Major manufacturers</li>
-                <li>Niche brands included</li>
-                <li>Regularly updated</li>
-            </ul>
-            <a href="<?= e(url('tablets.php')) ?>" class="cta-button">Browse Brands</a>
-        </div>
-
-        <div class="pricing-card popular">
-            <h3 class="plan-name"><?= $totalTablets ?></h3>
-            <div class="plan-price" style="font-size:1rem;font-weight:normal;"><span>Tablet Models</span></div>
-            <ul class="plan-features">
-                <li>Graphics &amp; display tablets</li>
-                <li>Full spec details</li>
-                <li>User report history</li>
-            </ul>
-            <a href="<?= e(url('tablets.php')) ?>" class="cta-button">View Models</a>
-        </div>
-
-        <div class="pricing-card">
-            <h3 class="plan-name"><?= $totalReports ?></h3>
-            <div class="plan-price" style="font-size:1rem;font-weight:normal;"><span>Community Reports</span></div>
-            <ul class="plan-features">
-                <li>Failure &amp; success stories</li>
-                <li>Issue breakdowns</li>
-                <li>Always growing</li>
-            </ul>
-            <a href="<?= e(url('survey.php')) ?>" class="cta-button">Add Yours</a>
-        </div>
-    </div>
-</section>
-
-<section class="about" id="about">
-    <div class="about-container">
-        <div class="about-content">
-            <h2>Trusted by Tablet Enthusiasts Worldwide</h2>
-            <p class="about-subtitle">Since 2024, we've been collecting and sharing real-world tablet reliability data to help the community make informed decisions.</p>
-
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <strong><?= $totalBrands ?></strong>
-                    <span>Brands</span>
-                </div>
-                <div class="stat-card">
-                    <strong><?= $totalTablets ?></strong>
-                    <span>Models</span>
-                </div>
-                <div class="stat-card">
-                    <strong><?= $totalReports ?></strong>
-                    <span>Reports</span>
-                </div>
-                <div class="stat-card">
-                    <strong>24/7</strong>
-                    <span>Open Access</span>
-                </div>
+<section class="section">
+    <div class="container">
+        <div class="flex-between">
+            <div>
+                <p class="eyebrow">Featured Tablets</p>
+                <h2>Start with the models people actually debate.</h2>
             </div>
-
-            <div class="about-text">
-                <p>Tablet Survey was born from a simple idea: tablet buyers deserve better data. Instead of relying on manufacturer specs and paid reviews, we collect real ownership experiences from actual users.</p>
-                <p>Our database tracks failure patterns, common issues, and longevity across brands and models. Whether you're an artist, designer, or hobbyist, you can contribute and benefit from community-powered reliability insights.</p>
-            </div>
+            <a class="button secondary" href="<?= e(url('tablets.php')) ?>">See all models</a>
         </div>
-    </div>
-</section>
-
-<section class="contact" id="contact">
-    <div class="contact-container">
-        <div class="contact-header">
-            <h2>Get Involved</h2>
-            <p class="contact-subtitle">Have a tablet to report? Want to browse the data? Jump in and contribute.</p>
-        </div>
-
-        <div class="contact-content">
-            <div class="contact-form-wrapper">
-                <div class="form-header">
-                    <h3>Submit a Report</h3>
-                    <p>Tell us about your tablet experience — it only takes a minute.</p>
-                </div>
-                <div style="display:flex;flex-direction:column;gap:1rem;">
-                    <a href="<?= e(url('survey.php')) ?>" class="cta-button" style="text-align:center;padding:1rem;font-size:1.1rem;">Take the Survey</a>
-                    <a href="<?= e(url('report.php')) ?>" class="button secondary" style="text-align:center;padding:1rem;font-size:1.1rem;">Quick Report</a>
-                </div>
-            </div>
-
-            <div class="contact-info">
-                <div class="quick-contact">
-                    <h3>Latest Reports</h3>
-                    <div class="contact-methods">
-                        <?php foreach ($recentReports as $r): ?>
-                            <a href="<?= e(url('tablet.php')) ?>?id=<?= (int) $r['tablet_id'] ?>" class="contact-method">
-                                <div class="method-details">
-                                    <strong><?= e($r['brand_name']) ?> <?= e($r['tablet_name']) ?></strong>
-                                    <span><?= e($r['status']) ?> &middot; <?= e(date('M j, Y', strtotime($r['created_at'] ?? 'now'))) ?></span>
-                                </div>
-                            </a>
-                        <?php endforeach; ?>
+        <div class="card-grid">
+            <?php foreach ($featured as $tablet): ?>
+                <article class="card reveal">
+                    <div class="surface-image" style="<?= $tablet['image_path'] ? 'background:var(--surface);padding:0;overflow:hidden;' : '' ?>">
+                        <?php if ($tablet['image_path']): ?>
+                            <img src="<?= e(uploadUrl($tablet['image_path'])) ?>" alt="<?= e($tablet['brand_name']) ?> <?= e($tablet['name']) ?>" style="width:100%;height:100%;object-fit:<?= e($tablet['image_fit'] ?? 'cover') ?>;display:block;">
+                        <?php else: ?>
+                            <?= e($tablet['brand_name']) ?> / <?= e($tablet['name']) ?>
+                        <?php endif; ?>
                     </div>
-                </div>
-            </div>
+                    <div class="meta">
+                        <span class="pill"><?= e($tablet['has_display'] ? 'Display' : 'Pen tablet') ?></span>
+                        <span class="pill"><?= e($tablet['pressure_levels'] ?: 'Unknown pressure') ?></span>
+                        <span class="pill"><?= (int) ($featuredStats[(int) $tablet['id']]['total_reports'] ?? 0) ?> reports</span>
+                    </div>
+                    <h3><?= e($tablet['brand_name']) ?> <?= e($tablet['name']) ?></h3>
+                    <p><?= e($tablet['notes'] ?: 'Community-sourced notes coming soon.') ?></p>
+                    <p class="muted">
+                        Working avg: <?= e((string) ($featuredStats[(int) $tablet['id']]['avg_years_working'] ?? 0)) ?> years
+                        · Fault avg: <?= e((string) ($featuredStats[(int) $tablet['id']]['avg_years_broken'] ?? 0)) ?> years
+                    </p>
+                    <a class="button secondary" href="<?= e(url('tablet.php')) ?>?id=<?= (int) $tablet['id'] ?>">View details</a>
+                </article>
+            <?php endforeach; ?>
         </div>
     </div>
 </section>
 
+<section class="section">
+    <div class="container grid-2">
+        <article class="panel reveal">
+            <p class="eyebrow">Why Tablet Survey</p>
+            <h2>Less hype, more ownership history.</h2>
+            <p>Specs matter, but failure patterns matter more. Tablet Survey is built to surface recurring issues like dead zones, worn cables, driver instability, and panel defects in a format that stays easy to browse.</p>
+        </article>
+        <article class="panel reveal">
+            <p class="eyebrow">Contribute</p>
+            <h2>Share a report in under a minute.</h2>
+            <p>Users can log whether a tablet is still working, how long it lasted, and what actually went wrong. Comments stay separate so quick impressions do not dilute structured reliability data.</p>
+        </article>
+    </div>
+</section>
+
+<div class="lightbox" data-lightbox>
+    <div class="lightbox-panel card">
+        <h3>Tablet Survey Snapshot</h3>
+        <p data-lightbox-content></p>
+    </div>
+</div>
 <?php renderFooter(); ?>

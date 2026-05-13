@@ -74,7 +74,7 @@ renderHeader('Home', '');
                 <article class="card reveal">
                     <div class="surface-image" style="<?= $tablet['image_path'] ? 'background:var(--surface);padding:0;overflow:hidden;' : '' ?>">
                         <?php if ($tablet['image_path']): ?>
-                            <img src="<?= e(uploadUrl($tablet['image_path'])) ?>" alt="<?= e($tablet['brand_name']) ?> <?= e($tablet['name']) ?>" style="width:100%;height:100%;object-fit:<?= e($tablet['image_fit'] ?? 'cover') ?>;display:block;">
+                            <img src="<?= e(uploadUrl($tablet['image_path'])) ?>" alt="<?= e($tablet['brand_name']) ?> <?= e($tablet['name']) ?>" style="width:100%;height:100%;object-fit:cover;object-position:<?= (int) ($tablet['image_pos_x'] ?? 50) ?>% <?= (int) ($tablet['image_pos_y'] ?? 50) ?>%;display:block;">
                         <?php else: ?>
                             <?= e($tablet['brand_name']) ?> / <?= e($tablet['name']) ?>
                         <?php endif; ?>

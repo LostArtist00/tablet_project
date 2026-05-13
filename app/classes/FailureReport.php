@@ -45,7 +45,7 @@ class FailureReport
             $stmt = $this->pdo->prepare('
                 INSERT INTO failure_reports 
                 (tablet_id, nickname, status, years_used, warranty_expired, severity, repair_status, failure_reason, extra_comment)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             ');
             $stmt->execute([
                 $data['tablet_id'],

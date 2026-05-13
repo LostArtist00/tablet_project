@@ -73,11 +73,23 @@ $flash = flashMessage();
                 <?= csrfField() ?>
                 
                 <div class="form-group">
+                    <label>Brand</label>
+                    <select id="reportBrandFilter" name="brand_filter">
+                        <option value="">All brands</option>
+                        <?php foreach ($brands as $brand): ?>
+                            <option value="<?= (int) $brand['id'] ?>" <?= old('brand_filter') == $brand['id'] ? 'selected' : '' ?>>
+                                <?= e($brand['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label>Select Tablet</label>
-                    <select name="tablet_id" required>
+                    <select id="reportTabletSelect" name="tablet_id" required>
                         <option value="">Choose a tablet...</option>
                         <?php foreach ($tablets as $t): ?>
-                            <option value="<?= (int) $t['id'] ?>" <?= old('tablet_id') == $t['id'] ? 'selected' : '' ?>>
+                            <option value="<?= (int) $t['id'] ?>" data-brand="<?= (int) $t['brand_id'] ?>" <?= old('tablet_id') == $t['id'] ? 'selected' : '' ?>>
                                 <?= e($t['brand_name']) ?> <?= e($t['name']) ?>
                             </option>
                         <?php endforeach; ?>

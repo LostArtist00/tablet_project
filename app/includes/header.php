@@ -2,48 +2,49 @@
 
 declare(strict_types=1);
 
-function renderHeader(string $title = '', string $extra = ''): void
+function renderHeader(string $title, string $active = ''): void
 {
+    $navigation = [
+        '' => 'Home',
+        'tablets.php' => 'Tablets',
+        'report.php' => 'Submit Report',
+        'about.php' => 'About',
+    ];
     ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= e($title) ?> - Tablet Survey</title>
-    <link rel="stylesheet" href="<?= e(asset('css/style.css')) ?>">
-    <?= $extra ?>
-</head>
-<body>
-    <div class="floating-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-    </div>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title><?= e($title) ?> | Tablet Survey</title>
+        <meta name="description" content="Tablet Survey is a graphics tablet reliability database built around repair stories, failure trends, and hard-earned user data.">
+        <link rel="stylesheet" href="<?= e(asset('css/style.css')) ?>?v=<?= (int) filemtime(APP_PATH . '/assets/css/style.css') ?>">
+    </head>
+    <body>
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brandmark" href="<?= e(url()) ?>">
+                <span class="brandmark-logo">TS</span>
+                <span>
+                    <strong>Tablet Survey</strong>
+                    <small>data dont lie</small>
+                </span>
+            </a>
 
-    <nav>
-        <div class="nav-container">
-            <div class="logo">Tablet Survey</div>
-            <div class="nav-links">
-                <a href="<?= e(url('tablets.php')) ?>">Tablets</a>
-                <a href="<?= e(url('about.php')) ?>">About</a>
-                <a href="<?= e(url('report.php')) ?>">Profile</a>
-                <a href="<?= e(url('survey.php')) ?>" class="cta-button">Survey</a>
-            </div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+            <button class="nav-toggle" type="button" aria-label="Toggle navigation" data-nav-toggle>
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
+
+            <nav class="site-nav" data-nav>
+                <?php foreach ($navigation as $href => $label): ?>
+                    <a class="<?= $active === $href ? 'active' : '' ?>" href="<?= e(url($href)) ?>"><?= e($label) ?></a>
+                <?php endforeach; ?>
+                <button class="theme-toggle" type="button" data-theme-toggle>Theme</button>
+            </nav>
         </div>
-        <div class="mobile-nav" id="mobileNav">
-            <a href="<?= e(url('tablets.php')) ?>">Features</a>
-            <a href="<?= e(url('tablets.php')) ?>">Pricing</a>
-            <a href="<?= e(url('about.php')) ?>">About</a>
-            <a href="<?= e(url('report.php')) ?>">Contact</a>
-            <a href="<?= e(url('survey.php')) ?>" class="cta-button">Survey</a>
-        </div>
-    </nav>
+    </header>
     <main>
     <?php
 }

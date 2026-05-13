@@ -12,66 +12,69 @@ $brandModel = new Brand(db());
 $tablets = $tabletModel->all();
 $brands = $brandModel->all();
 
-renderHeader('Browse Tablets', '');
+renderHeader('Browse Tablets', 'tablets.php');
 ?>
 <section class="section">
     <div class="container">
-        <h1>Tablet Database</h1>
-        <p>Browse tablets, compare specs, and check reliability reports.</p>
+        <div class="flex-between">
+            <div>
+                <p class="eyebrow">Database</p>
+                <h1>Tablet Models</h1>
+            </div>
+        </div>
 
-        <div class="gallery-filter-bar">
-            <div class="gallery-filter-group">
-                <span class="filter-label">Filter by Brand</span>
-                <div class="filter-options" id="brandFilters">
+        <div class="tablet-filters">
+            <div class="tablet-filter-group">
+                <span class="eyebrow tablet-filter-label">Filter by Brand</span>
+                <div class="checkbox-grid" id="brandFilters">
                     <?php foreach ($brands as $brand): ?>
-                        <label class="filter-checkbox">
+                        <label class="checkbox">
                             <input type="checkbox" data-filter="brand" value="<?= (int) $brand['id'] ?>" checked>
                             <?= e($brand['name']) ?>
                         </label>
                     <?php endforeach; ?>
                 </div>
             </div>
-            <div class="gallery-filter-group">
-                <span class="filter-label">Filter by Type</span>
-                <div class="filter-options" id="typeFilters">
-                    <label class="filter-radio">
-                        <input type="radio" data-filter="type" value="" name="galleryType" checked>
-                        All
+            <div class="tablet-filter-group">
+                <span class="eyebrow tablet-filter-label">Filter by Type</span>
+                <div class="meta tablet-type-options">
+                    <label class="pill">
+                        <input type="radio" data-filter="type" value="" name="galleryType" checked hidden> All
                     </label>
-                    <label class="filter-radio">
-                        <input type="radio" data-filter="type" value="display" name="galleryType">
-                        Display
+                    <label class="pill">
+                        <input type="radio" data-filter="type" value="display" name="galleryType" hidden> Display
                     </label>
-                    <label class="filter-radio">
-                        <input type="radio" data-filter="type" value="graphics" name="galleryType">
-                        Graphics
+                    <label class="pill">
+                        <input type="radio" data-filter="type" value="graphics" name="galleryType" hidden> Graphics
                     </label>
                 </div>
             </div>
-            <div class="gallery-filter-group" style="flex:1;min-width:200px;">
-                <span class="filter-label">Search</span>
-                <input type="search" id="gallerySearch" class="gallery-search" placeholder="Search tablets..." autocomplete="off" style="margin-bottom:0;">
-            </div>
+            <input type="search" id="gallerySearch" class="gallery-search" placeholder="Search tablets..." autocomplete="off">
         </div>
 
-        <div class="gallery-grid" id="galleryGrid">
+        <div class="card-grid" id="galleryGrid">
             <?php foreach ($tablets as $t): ?>
-                <article class="gallery-item visible"
+                <article class="card tablet-card visible"
                     data-brand="<?= (int) $t['brand_id'] ?>"
                     data-type="<?= $t['has_display'] ? 'display' : 'graphics' ?>"
                     data-name="<?= e(strtolower($t['brand_name'] . ' ' . $t['name'])) ?>">
-                    <div class="gallery-item-image"><?= e($t['brand_name']) ?> / <?= e($t['name']) ?></div>
+                    <div class="surface-image tablet-card__image" style="<?= $t['image_path'] ? 'background:var(--surface);padding:0;overflow:hidden;' : '' ?>">
+                        <?php if ($t['image_path']): ?>
+                            <img src="<?= e(uploadUrl($t['image_path'])) ?>" alt="<?= e($t['brand_name']) ?> <?= e($t['name']) ?>" style="width:100%;height:100%;object-fit:<?= e($t['image_fit'] ?? 'cover') ?>;display:block;">
+                        <?php else: ?>
+                            <?= e($t['brand_name']) ?> / <?= e($t['name']) ?>
+                        <?php endif; ?>
+                    </div>
                     <h3><?= e($t['brand_name']) ?> <?= e($t['name']) ?></h3>
-                    <div class="gallery-meta">
+                    <div class="meta tablet-card__meta">
                         <span class="pill"><?= $t['has_display'] ? 'Display' : 'Pen tablet' ?></span>
                         <span class="pill"><?= e($t['size'] ?: 'N/A') ?></span>
                     </div>
-                    <div class="gallery-price"><?= $t['price'] ? '$' . e((string) $t['price']) : '' ?></div>
                     <p class="muted"><?= e($t['notes'] ?: '') ?></p>
-                    <a class="gallery-link" href="<?= e(url('tablet.php')) ?>?id=<?= (int) $t['id'] ?>">View details</a>
+                    <a class="button secondary" href="<?= e(url('tablet.php')) ?>?id=<?= (int) $t['id'] ?>">View details</a>
                 </article>
             <?php endforeach; ?>
-            <div class="gallery-empty" style="display:none;">
+            <div class="empty-state" style="display:none;">
                 <p>No tablets match your filters.</p>
             </div>
         </div>

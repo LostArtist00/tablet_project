@@ -62,6 +62,11 @@ function asset(string $path): string
     return ASSET_PATH . '/' . ltrim($path, '/');
 }
 
+function uploadUrl(string $path = ''): string
+{
+    return BASE_URL . '/uploads/' . ltrim($path, '/');
+}
+
 function url(string $path = ''): string
 {
     $path = ltrim($path, '/');

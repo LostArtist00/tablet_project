@@ -17,22 +17,19 @@ class Auth
         $stmt->execute([$username]);
         $admin = $stmt->fetch();
 
-        if (!$admin) {
+        if (!$admin || !password_verify($password, $admin['password_hash'])) {
             return false;
         }
 
-        if (!password_verify($password, $admin['password_hash'])) {
-            return false;
-        }
-
-        $_SESSION['admin_id'] = $admin['id'];
+        session_regenerate_id(true);
+        $_SESSION['admin_id'] = (int) $admin['id'];
         $_SESSION['admin_username'] = $admin['username'];
         return true;
     }
 
     public function check(): bool
     {
-        return isset($_SESSION['admin_id']) && is_int($_SESSION['admin_id']);
+        return !empty($_SESSION['admin_id']);
     }
 
     public function requireAdmin(): void

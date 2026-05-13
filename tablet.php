@@ -45,6 +45,9 @@ renderHeader(e($tablet['brand_name'] . ' ' . $tablet['name']), '');
 <section class="section">
     <div class="container">
         <article class="card">
+            <?php if ($tablet['image_path']): ?>
+                <img src="<?= e(uploadUrl($tablet['image_path'])) ?>" alt="<?= e($tablet['brand_name']) ?> <?= e($tablet['name']) ?>" style="width:100%;max-height:300px;object-fit:<?= e($tablet['image_fit'] ?? 'cover') ?>;border-radius:20px;margin-bottom:1rem;">
+            <?php endif; ?>
             <h1><?= e($tablet['brand_name']) ?> <?= e($tablet['name']) ?></h1>
             <div class="meta">
                 <span class="pill"><?= e($tablet['has_display'] ? 'Display' : 'Pen tablet') ?></span>

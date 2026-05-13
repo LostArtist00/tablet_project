@@ -50,8 +50,8 @@ class Tablet
     public function create(array $data): int
     {
         $stmt = $this->pdo->prepare('
-            INSERT INTO tablets (brand_id, name, size, has_display, price, release_date, pressure_levels, connection_type, notes)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO tablets (brand_id, name, size, has_display, price, release_date, pressure_levels, connection_type, notes, image_path, image_fit)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ');
         $stmt->execute([
             $data['brand_id'],
@@ -63,6 +63,8 @@ class Tablet
             $data['pressure_levels'] ?? null,
             $data['connection_type'] ?? null,
             $data['notes'] ?? null,
+            $data['image_path'] ?? null,
+            $data['image_fit'] ?? 'cover',
         ]);
         return (int) $this->pdo->lastInsertId();
     }
@@ -72,7 +74,8 @@ class Tablet
         $stmt = $this->pdo->prepare('
             UPDATE tablets SET 
                 brand_id = ?, name = ?, size = ?, has_display = ?, price = ?,
-                release_date = ?, pressure_levels = ?, connection_type = ?, notes = ?
+                release_date = ?, pressure_levels = ?, connection_type = ?, notes = ?,
+                image_path = ?, image_fit = ?
             WHERE id = ?
         ');
         return $stmt->execute([
@@ -85,6 +88,8 @@ class Tablet
             $data['pressure_levels'] ?? null,
             $data['connection_type'] ?? null,
             $data['notes'] ?? null,
+            $data['image_path'] ?? null,
+            $data['image_fit'] ?? 'cover',
             $id,
         ]);
     }

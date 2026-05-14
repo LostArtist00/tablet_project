@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Models\Auth;
+use App\Models\Tablet;
+use App\Models\Brand;
+
 require_once __DIR__ . '/../../app/config/init.php';
 require_once APP_PATH . '/includes/admin.php';
 
@@ -61,7 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         setFlash('Tablet updated.');
     } else {
         $id = $tabletModel->create($data);
-        $data['image_path'] = 'tablets/tablet_' . $id . '_' . time() . '.' . $ext ?? 'jpg';
         setFlash('Tablet created.');
     }
     redirect('admin/tablets/index.php');
@@ -115,22 +118,28 @@ renderAdminHeader($id ? 'Edit Tablet' : 'Add Tablet');
         </div>
         <div class="form-group">
             <label>Image</label>
-            <?php if ($tablet && $tablet['image_path']): ?>
-                <div style="margin-bottom:0.5rem;">
-                    <div class="position-picker" style="position:relative;width:280px;height:180px;border-radius:12px;overflow:hidden;border:1px solid var(--border);cursor:crosshair;background:var(--surface-2);">
-                        <img src="<?= e(uploadUrl($tablet['image_path'])) ?>" alt="" style="width:100%;height:100%;object-fit:cover;object-position:<?= (int) ($tablet['image_pos_x'] ?? 50) ?>% <?= (int) ($tablet['image_pos_y'] ?? 50) ?>%;pointer-events:none;">
-                        <div class="pos-dot" style="position:absolute;width:14px;height:14px;border:2px solid white;border-radius:50%;background:rgba(74,154,142,0.7);transform:translate(-50%,-50%);left:<?= (int) ($tablet['image_pos_x'] ?? 50) ?>%;top:<?= (int) ($tablet['image_pos_y'] ?? 50) ?>%;pointer-events:none;box-shadow:0 0 6px rgba(0,0,0,0.5);"></div>
-                        <div style="position:absolute;bottom:4px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.65);color:#fff;font-size:0.7rem;padding:2px 8px;border-radius:4px;pointer-events:none;">Click to set focal point</div>
-                        <input type="hidden" name="image_pos_x" value="<?= (int) ($tablet['image_pos_x'] ?? 50) ?>">
-                        <input type="hidden" name="image_pos_y" value="<?= (int) ($tablet['image_pos_y'] ?? 50) ?>">
-                    </div>
+            <?php $hasImage = $tablet && $tablet['image_path']; ?>
+            <div class="position-picker <?= $hasImage ? '' : 'is-empty' ?>">
+                <?php if ($hasImage): ?>
+                    <img src="<?= e(uploadUrl($tablet['image_path'])) ?>" alt="">
+                <?php else: ?>
+                    <img src="" alt="" hidden>
+                    <span class="position-picker__empty">Choose an image to preview it here</span>
+                <?php endif; ?>
+                <div class="pos-dot"></div>
+                <div class="position-picker__hint">Click to set focal point</div>
+                <input type="hidden" name="image_pos_x" value="<?= (int) ($tablet['image_pos_x'] ?? 50) ?>">
+                <input type="hidden" name="image_pos_y" value="<?= (int) ($tablet['image_pos_y'] ?? 50) ?>">
+            </div>
+            <?php if ($hasImage): ?>
+                <div>
                     <label style="display:inline-flex;align-items:center;gap:0.4rem;margin-top:0.4rem;">
                         <input type="checkbox" name="remove_image" value="1"> Remove image
                     </label>
                 </div>
             <?php endif; ?>
-            <input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/webp">
-            <p class="muted" style="font-size:0.85rem;margin-top:0.35rem;">After uploading, save first, then click the preview to adjust focal point.</p>
+            <input type="file" name="image" accept="image/jpeg,image/png,image/gif,image/webp" data-image-preview>
+            <p class="muted" style="font-size:0.85rem;margin-top:0.35rem;">Choose an image, then click the preview to center the card crop before saving.</p>
         </div>
         <div class="form-group">
             <label>Notes</label>
@@ -141,15 +150,49 @@ renderAdminHeader($id ? 'Edit Tablet' : 'Add Tablet');
     </form>
 </div>
 <script>
-document.querySelector('.position-picker')?.addEventListener('click', function(e) {
-    const rect = this.getBoundingClientRect();
-    const x = Math.round(((e.clientX - rect.left) / rect.width) * 100);
-    const y = Math.round(((e.clientY - rect.top) / rect.height) * 100);
-    this.querySelector('input[name="image_pos_x"]').value = x;
-    this.querySelector('input[name="image_pos_y"]').value = y;
-    this.querySelector('.pos-dot').style.left = x + '%';
-    this.querySelector('.pos-dot').style.top = y + '%';
-    this.querySelector('img').style.objectPosition = x + '% ' + y + '%';
+const picker = document.querySelector('.position-picker');
+const imageInput = document.querySelector('[data-image-preview]');
+
+function setFocalPoint(x, y) {
+    if (!picker) return;
+    const clampedX = Math.max(0, Math.min(100, x));
+    const clampedY = Math.max(0, Math.min(100, y));
+    const img = picker.querySelector('img');
+
+    picker.querySelector('input[name="image_pos_x"]').value = clampedX;
+    picker.querySelector('input[name="image_pos_y"]').value = clampedY;
+    picker.querySelector('.pos-dot').style.left = clampedX + '%';
+    picker.querySelector('.pos-dot').style.top = clampedY + '%';
+    if (img) img.style.objectPosition = clampedX + '% ' + clampedY + '%';
+}
+
+if (picker) {
+    setFocalPoint(
+        parseInt(picker.querySelector('input[name="image_pos_x"]').value, 10) || 50,
+        parseInt(picker.querySelector('input[name="image_pos_y"]').value, 10) || 50
+    );
+
+    picker.addEventListener('click', function(e) {
+        if (picker.classList.contains('is-empty')) return;
+        const rect = picker.getBoundingClientRect();
+        setFocalPoint(
+            Math.round(((e.clientX - rect.left) / rect.width) * 100),
+            Math.round(((e.clientY - rect.top) / rect.height) * 100)
+        );
+    });
+}
+
+imageInput?.addEventListener('change', function() {
+    const file = this.files && this.files[0];
+    if (!file || !picker) return;
+
+    const img = picker.querySelector('img');
+    const empty = picker.querySelector('.position-picker__empty');
+    img.src = URL.createObjectURL(file);
+    img.hidden = false;
+    if (empty) empty.hidden = true;
+    picker.classList.remove('is-empty');
+    setFocalPoint(50, 50);
 });
 </script>
 <?php renderAdminFooter(); ?>

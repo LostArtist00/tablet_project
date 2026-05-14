@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Models\Tablet;
+use App\Models\FailureReport;
+use App\Models\Comment;
+
 require_once __DIR__ . '/app/config/init.php';
 require_once APP_PATH . '/includes/header.php';
 require_once APP_PATH . '/includes/footer.php';
@@ -50,16 +54,18 @@ renderHeader(e($tablet['brand_name'] . ' ' . $tablet['name']), '');
                     <img src="<?= e(uploadUrl($tablet['image_path'])) ?>" alt="<?= e($tablet['brand_name']) ?> <?= e($tablet['name']) ?>" style="object-position:<?= (int) ($tablet['image_pos_x'] ?? 50) ?>% <?= (int) ($tablet['image_pos_y'] ?? 50) ?>%;">
                 </div>
             <?php endif; ?>
-            <h1><?= e($tablet['brand_name']) ?> <?= e($tablet['name']) ?></h1>
-            <div class="meta tablet-detail__meta">
-                <span class="pill"><?= e($tablet['has_display'] ? 'Display' : 'Pen tablet') ?></span>
-                <span class="pill"><?= e($tablet['size']) ?></span>
-                <span class="pill"><?= e($tablet['pressure_levels']) ?> pressure</span>
+            <div class="tablet-detail__content">
+                <h1><?= e($tablet['brand_name']) ?> <?= e($tablet['name']) ?></h1>
+                <div class="meta tablet-detail__meta">
+                    <span class="pill"><?= e($tablet['has_display'] ? 'Display' : 'Pen tablet') ?></span>
+                    <span class="pill"><?= e($tablet['size']) ?></span>
+                    <span class="pill"><?= e($tablet['pressure_levels']) ?> pressure</span>
+                </div>
+
+                <p><strong>Price:</strong> $<?= e($tablet['price']) ?></p>
+                <p><strong>Connection:</strong> <?= e($tablet['connection_type']) ?></p>
+                <p><?= e($tablet['notes']) ?></p>
             </div>
-            
-            <p><strong>Price:</strong> $<?= e($tablet['price']) ?></p>
-            <p><strong>Connection:</strong> <?= e($tablet['connection_type']) ?></p>
-            <p><?= e($tablet['notes']) ?></p>
         </article>
 
         <div class="stats-grid">

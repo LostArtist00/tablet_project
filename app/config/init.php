@@ -2,6 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Core\Database;
+
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
@@ -27,13 +31,6 @@ $dbConfig = [
     'password' => '',
     'charset' => 'utf8mb4',
 ];
-
-require_once APP_ROOT . '/core/Database.php';
-require_once APP_PATH . '/classes/Brand.php';
-require_once APP_PATH . '/classes/Tablet.php';
-require_once APP_PATH . '/classes/FailureReport.php';
-require_once APP_PATH . '/classes/Comment.php';
-require_once APP_PATH . '/classes/Auth.php';
 
 function db(): PDO
 {

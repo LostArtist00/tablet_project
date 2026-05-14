@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Models\Auth;
+use App\Models\Brand;
+use App\Models\Tablet;
+use App\Models\FailureReport;
+use App\Models\Comment;
+
 require_once __DIR__ . '/../app/config/init.php';
 require_once APP_PATH . '/includes/admin.php';
 

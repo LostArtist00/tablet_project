@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Models\Tablet;
+
 require_once __DIR__ . '/app/config/init.php';
 require_once APP_PATH . '/includes/header.php';
 require_once APP_PATH . '/includes/footer.php';
@@ -87,8 +89,8 @@ renderHeader('Home', '');
                     <h3><?= e($tablet['brand_name']) ?> <?= e($tablet['name']) ?></h3>
                     <p><?= e($tablet['notes'] ?: 'Community-sourced notes coming soon.') ?></p>
                     <p class="muted">
-                        Working avg: <?= e((string) ($featuredStats[(int) $tablet['id']]['avg_years_working'] ?? 0)) ?> years
-                        · Fault avg: <?= e((string) ($featuredStats[(int) $tablet['id']]['avg_years_broken'] ?? 0)) ?> years
+                        Working avg: <?= e(number_format((float) ($featuredStats[(int) $tablet['id']]['avg_years_working'] ?? 0), 1)) ?> years
+                        · Fault avg: <?= e(number_format((float) ($featuredStats[(int) $tablet['id']]['avg_years_broken'] ?? 0), 1)) ?> years
                     </p>
                     <a class="button secondary" href="<?= e(url('tablet.php')) ?>?id=<?= (int) $tablet['id'] ?>">View details</a>
                 </article>

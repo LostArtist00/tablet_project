@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Models\Tablet;
+use App\Models\Brand;
+
 require_once __DIR__ . '/app/config/init.php';
 require_once APP_PATH . '/includes/header.php';
 require_once APP_PATH . '/includes/footer.php';

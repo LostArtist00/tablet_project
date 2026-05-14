@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Models\Auth;
+
 require_once __DIR__ . '/../app/config/init.php';
 
 $auth = new Auth(db());

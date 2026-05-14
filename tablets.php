@@ -63,7 +63,7 @@ renderHeader('Browse Tablets', 'tablets.php');
                     data-name="<?= e(strtolower($t['brand_name'] . ' ' . $t['name'])) ?>">
                     <div class="surface-image tablet-card__image" style="<?= $t['image_path'] ? 'background:var(--surface);padding:0;overflow:hidden;' : '' ?>">
                         <?php if ($t['image_path']): ?>
-                            <img src="<?= e(uploadUrl($t['image_path'])) ?>" alt="<?= e($t['brand_name']) ?> <?= e($t['name']) ?>" style="width:100%;height:100%;object-fit:cover;object-position:<?= (int) ($t['image_pos_x'] ?? 50) ?>% <?= (int) ($t['image_pos_y'] ?? 50) ?>%;display:block;">
+                            <img src="<?= e(uploadUrl($t['image_path'])) ?>" alt="<?= e($t['brand_name']) ?> <?= e($t['name']) ?>" style="width:100%;height:100%;object-fit:contain;object-position:<?= (int) ($t['image_pos_x'] ?? 50) ?>% <?= (int) ($t['image_pos_y'] ?? 50) ?>%;display:block;background:#fff;">
                         <?php else: ?>
                             <?= e($t['brand_name']) ?> / <?= e($t['name']) ?>
                         <?php endif; ?>

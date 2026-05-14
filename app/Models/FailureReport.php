@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
+namespace App\Models;
+
 class FailureReport
 {
-    private PDO $pdo;
+    private \PDO $pdo;
 
-    public function __construct(PDO $pdo)
+    public function __construct(\PDO $pdo)
     {
         $this->pdo = $pdo;
     }
@@ -77,7 +79,7 @@ class FailureReport
 
             $this->pdo->commit();
             return $reportId;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->pdo->rollBack();
             throw $e;
         }

@@ -431,11 +431,13 @@ textarea {
 
 .tablet-detail {
     display: grid;
-    gap: 1rem;
+    grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: 1.5rem;
 }
 
 .tablet-detail__media {
-    aspect-ratio: 16 / 5;
+    aspect-ratio: 4 / 3;
     border-radius: 16px;
     overflow: hidden;
     background: var(--surface-2);
@@ -447,6 +449,11 @@ textarea {
     height: 100%;
     object-fit: contain;
     background: #ffffff;
+}
+
+.tablet-detail__content {
+    display: grid;
+    gap: 1rem;
 }
 
 .tablet-detail h1,
@@ -687,6 +694,67 @@ td {
     height: 1rem;
     margin: 0;
     accent-color: var(--accent);
+}
+
+.position-picker {
+    position: relative;
+    width: min(360px, 100%);
+    aspect-ratio: 4 / 3;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    cursor: crosshair;
+    background: var(--surface-2);
+}
+
+.position-picker img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.position-picker.is-empty {
+    cursor: default;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    color: var(--text);
+    text-align: center;
+}
+
+.pos-dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    left: 50%;
+    top: 50%;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: rgba(74, 154, 142, 0.72);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+.position-picker__hint {
+    position: absolute;
+    bottom: 0.4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.25rem 0.55rem;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    font-size: 0.72rem;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.position-picker.is-empty .pos-dot,
+.position-picker.is-empty .position-picker__hint {
+    display: none;
 }
 
 .admin-grid {
@@ -968,6 +1036,10 @@ td {
     .tablet-detail + .stats-grid {
         grid-template-columns: 1fr;
         width: 100%;
+    }
+
+    .tablet-detail {
+        grid-template-columns: 1fr;
     }
 
     .tablet-detail__media {

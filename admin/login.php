@@ -30,14 +30,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login | Tablet Survey</title>
-    <link rel="stylesheet" href="<?= e(asset('css/style.css')) ?>">
+    <link rel="stylesheet" href="<?= e(asset('css/style.css')) ?>?v=<?= (int) filemtime(APP_PATH . '/assets/css/style.css') ?>">
 </head>
 <body>
     <div class="login-shell">
         <form method="post" class="form-card" style="width:min(460px,100%);">
             <?= csrfField() ?>
             <p class="eyebrow">Admin Login</p>
-            <h1>Manage Tablet Survey</h1>
+            <h1>Admin panel</h1>
             <?php if ($error): ?>
                 <div class="flash"><?= e($error) ?></div>
             <?php endif; ?>
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </label>
             <div class="actions" style="margin-top:1rem;">
                 <button type="submit">Login</button>
-                <a class="button secondary" href="<?= e(url()) ?>">Back to site</a>
+                <a class="button secondary" href="<?= e(url()) ?>">Back</a>
             </div>
         </form>
     </div>

@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'issues' => $issues,
     ];
     if ($data['tablet_id'] && $report->create($data)) {
-        setFlash('Thank you for completing the survey!', 'success');
+        setFlash('Thanks for the report!', 'success');
         redirect('tablets.php');
     } else {
         setFlash('Please select a tablet.', 'error');
@@ -55,7 +55,7 @@ renderHeader('Survey', '');
         </div>
 
         <fieldset class="step" data-step="1">
-            <legend>1. Choose between tablet brands</legend>
+            <legend>1. Pick a brand</legend>
             <div class="survey-options">
                 <?php foreach ($brands as $brand): ?>
                     <label class="survey-option">
@@ -68,7 +68,7 @@ renderHeader('Survey', '');
         </fieldset>
 
         <fieldset class="step" data-step="2">
-            <legend>2. Is it a graphics tablet or a display tablet?</legend>
+            <legend>2. Screen or no screen?</legend>
             <div class="survey-options">
                 <label class="survey-option">
                     <input type="radio" name="has_display" value="0" checked>
@@ -84,7 +84,7 @@ renderHeader('Survey', '');
         </fieldset>
 
         <fieldset class="step" data-step="3">
-            <legend>3. Which tablet is it?</legend>
+            <legend>3. Which model?</legend>
             <input type="search" id="surveySearch" class="survey-search" placeholder="Search tablets..." autocomplete="off">
             <div class="survey-tablet-list" id="surveyTabletList">
                 <?php foreach ($tablets as $t): ?>
@@ -99,44 +99,44 @@ renderHeader('Survey', '');
         </fieldset>
 
         <fieldset class="step" data-step="4">
-            <legend>4. How is the tablet?</legend>
+            <legend>4. How's it holding up?</legend>
             <div class="survey-options">
                 <label class="survey-option">
                     <input type="radio" name="status" value="working" checked>
-                    Still works
+                    Works fine
                 </label>
                 <label class="survey-option">
                     <input type="radio" name="status" value="broken">
-                    Broken
+                    Dead
                 </label>
             </div>
 
             <div class="form-group">
-                <label for="duration">How long have you had it? <span class="muted">(optional)</span></label>
+                <label for="duration">How long did you have it? <span class="muted">(optional)</span></label>
                 <input type="number" id="duration" name="years_owned" min="1" placeholder="years">
             </div>
 
             <div class="form-group">
-                <label>Common problems (select all that apply)</label>
+                <label>What went wrong? <span class="muted">hover each issue for details</span></label>
                 <div class="survey-issues-list">
-                    <label><input type="checkbox" name="issues[]" value="screen"> Screen damage</label>
-                    <label><input type="checkbox" name="issues[]" value="stylus"> Stylus issues</label>
-                    <label><input type="checkbox" name="issues[]" value="drivers"> Driver crashes</label>
-                    <label><input type="checkbox" name="issues[]" value="battery"> Battery life</label>
-                    <label><input type="checkbox" name="issues[]" value="cables"> Cable fraying</label>
-                    <label><input type="checkbox" name="issues[]" value="dead_zone"> Dead zone</label>
-                    <label><input type="checkbox" name="issues[]" value="connection"> Connection drops</label>
-                    <label><input type="checkbox" name="issues[]" value="pressure"> Pressure sensitivity</label>
+                    <label title="Cracked glass, dead pixels, or the display flickering or cutting out. Common on display tablets after drops or extended use."><input type="checkbox" name="issues[]" value="screen"> Screen damage</label>
+                    <label title="The pen tip, buttons, or pressure sensitivity are unreliable. Can include jittery lines, no cursor movement, or the pen not being detected at all."><input type="checkbox" name="issues[]" value="stylus"> Stylus issues</label>
+                    <label title="Driver crashes, failure to detect the tablet, or problems that started right after a driver or OS update. Also covers Windows Ink / WinTab conflicts."><input type="checkbox" name="issues[]" value="drivers"> Driver / software</label>
+                    <label title="Battery drains too fast, won't hold a charge, or the tablet only works while plugged in. Relevant for wireless models."><input type="checkbox" name="issues[]" value="battery"> Battery issues</label>
+                    <label title="The bundled USB / HDMI / USB-C cable is fraying, loose, or only works when held at a certain angle. A very common wear point."><input type="checkbox" name="issues[]" value="cables"> Cable faults</label>
+                    <label title="A portion of the drawing surface does not register the pen cursor, making that area unusable. Often caused by impact or manufacturing defects."><input type="checkbox" name="issues[]" value="dead_zone"> Dead zone on surface</label>
+                    <label title="The tablet intermittently disconnects from the computer, the port feels loose, or video signal drops out during use."><input type="checkbox" name="issues[]" value="connection"> Connection drops</label>
+                    <label title="Pressure sensitivity is missing or inconsistent — lines come out the same thickness regardless of how hard you press. Often a driver or calibration issue."><input type="checkbox" name="issues[]" value="pressure"> Pressure problems</label>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="comment">Any additional comments?</label>
+                <label for="comment">Anything else to add?</label>
                 <textarea id="comment" name="notes" rows="3" placeholder="Your thoughts..."></textarea>
             </div>
 
             <button type="button" class="prev-btn">Prev</button>
-            <button type="submit" class="submit-btn">Submit Survey</button>
+            <button type="submit" class="submit-btn">Submit</button>
         </fieldset>
     </form>
 </section>

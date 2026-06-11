@@ -52,8 +52,8 @@ class Tablet
     public function create(array $data): int
     {
         $stmt = $this->pdo->prepare('
-            INSERT INTO tablets (brand_id, name, size, has_display, price, release_date, pressure_levels, connection_type, notes, image_path, image_pos_x, image_pos_y)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO tablets (brand_id, name, size, has_display, price, release_date, pressure_levels, connection_type, display_resolution, notes, image_path, image_pos_x, image_pos_y)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ');
         $stmt->execute([
             $data['brand_id'],
@@ -64,6 +64,7 @@ class Tablet
             $data['release_date'] ?? null,
             $data['pressure_levels'] ?? null,
             $data['connection_type'] ?? null,
+            $data['display_resolution'] ?? null,
             $data['notes'] ?? null,
             $data['image_path'] ?? null,
             $data['image_pos_x'] ?? 50,
@@ -77,8 +78,8 @@ class Tablet
         $stmt = $this->pdo->prepare('
             UPDATE tablets SET 
                 brand_id = ?, name = ?, size = ?, has_display = ?, price = ?,
-                release_date = ?, pressure_levels = ?, connection_type = ?, notes = ?,
-                image_path = ?, image_pos_x = ?, image_pos_y = ?
+                release_date = ?, pressure_levels = ?, connection_type = ?, display_resolution = ?,
+                notes = ?, image_path = ?, image_pos_x = ?, image_pos_y = ?
             WHERE id = ?
         ');
         return $stmt->execute([
@@ -90,6 +91,7 @@ class Tablet
             $data['release_date'] ?? null,
             $data['pressure_levels'] ?? null,
             $data['connection_type'] ?? null,
+            $data['display_resolution'] ?? null,
             $data['notes'] ?? null,
             $data['image_path'] ?? null,
             $data['image_pos_x'] ?? 50,
@@ -121,15 +123,32 @@ class Tablet
         return $stmt->fetch();
     }
 
+    public function allWithStats(): array
+    {
+        $stmt = $this->pdo->query('
+            SELECT t.*, b.name as brand_name,
+                COUNT(fr.id) as total_reports,
+                ROUND(AVG(CASE WHEN fr.status = "working" AND fr.years_used IS NOT NULL THEN fr.years_used END), 1) as avg_years_working,
+                ROUND(AVG(CASE WHEN fr.status != "working" AND fr.years_used IS NOT NULL THEN fr.years_used END), 1) as avg_years_fault
+            FROM tablets t
+            JOIN brands b ON t.brand_id = b.id
+            LEFT JOIN failure_reports fr ON fr.tablet_id = t.id
+            GROUP BY t.id, b.name
+            ORDER BY b.name, t.name
+        ');
+        return $stmt->fetchAll();
+    }
+
     public function search(string $query, ?int $brandId = null): array
     {
         $sql = '
-            SELECT t.*, b.name as brand_name 
-            FROM tablets t 
-            JOIN brands b ON t.brand_id = b.id 
+            SELECT t.*, b.name as brand_name
+            FROM tablets t
+            JOIN brands b ON t.brand_id = b.id
             WHERE (t.name LIKE ? OR b.name LIKE ?)
         ';
-        $params = ['%' . $query . '%', '%' . $query . '%'];
+        $like = '%' . str_replace(['%', '_'], ['\%', '\_'], $query) . '%';
+        $params = [$like, $like];
 
         if ($brandId) {
             $sql .= ' AND t.brand_id = ?';

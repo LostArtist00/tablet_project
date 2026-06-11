@@ -13,8 +13,9 @@ $auth->requireAdmin();
 
 $commentModel = new Comment(db());
 
-if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $commentModel->delete((int) $_GET['delete']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
+    requireCsrfToken();
+    $commentModel->delete((int) $_POST['delete']);
     setFlash('Comment deleted.');
     redirect('admin/comments/index.php');
 }
@@ -45,7 +46,11 @@ renderAdminHeader('Comments');
                     <td><?= e(substr($comment['comment_text'], 0, 50)) ?>...</td>
                     <td><?= date('M j, Y', strtotime($comment['created_at'])) ?></td>
                     <td>
-                        <a href="index.php?delete=<?= (int) $comment['id'] ?>" onclick="return confirm('Delete?')">Delete</a>
+                        <form method="post" style="display:inline" onsubmit="return confirm('Delete this comment?')">
+                            <?= csrfField() ?>
+                            <input type="hidden" name="delete" value="<?= (int) $comment['id'] ?>">
+                            <button type="submit" style="background:none;border:none;color:inherit;cursor:pointer;padding:0;font:inherit;text-decoration:underline">Delete</button>
+                        </form>
                     </td>
                 </tr>
             <?php endforeach; ?>

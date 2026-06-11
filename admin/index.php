@@ -134,3 +134,4 @@ $recentActivity = $reportModel->recentActivity(12);
         </div>
     </div>
 </div>
+<?php renderAdminFooter(); ?>

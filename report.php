@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use App\Models\Tablet;
 use App\Models\Brand;
 use App\Models\FailureReport;
@@ -26,7 +24,13 @@ foreach ($stmt->fetchAll() as $row) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     requireCsrfToken();
     
-    $tabletId = (int) $_POST['tablet_id'];
+    $tabletId = (int) ($_POST['tablet_id'] ?? 0);
+
+    $exists = $tabletModel->byId($tabletId);
+    if (!$exists) {
+        setFlash('Invalid tablet selected.', 'error');
+        redirect('report.php');
+    }
     
     $issues = [];
     if (!empty($_POST['issues'])) {
@@ -54,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'issues' => $issues,
     ]);
     
-    setFlash('Report submitted. Thank you!');
+    setFlash('Thanks, report saved.');
     redirect('tablets.php');
 }
 
@@ -64,9 +68,9 @@ $flash = flashMessage();
 <section class="section">
     <div class="container grid-2">
         <article class="panel reveal">
-            <p class="eyebrow">Failure Survey</p>
-            <h1>Log what happened to your tablet.</h1>
-            <p>Select your tablet, mark the issues you experienced, and describe what went wrong.</p>
+            <p class="eyebrow">Report</p>
+            <h1>What happened to your tablet?</h1>
+            <p>Pick your model, check off any issues, and tell us the story.</p>
         </article>
         
         <article class="panel reveal">
@@ -91,7 +95,7 @@ $flash = flashMessage();
                 <div class="form-group">
                     <label>Select Tablet</label>
                     <select id="reportTabletSelect" name="tablet_id" required>
-                        <option value="">Choose a tablet...</option>
+                        <option value="">Select a model...</option>
                         <?php foreach ($tablets as $t): ?>
                             <option value="<?= (int) $t['id'] ?>" data-brand="<?= (int) $t['brand_id'] ?>" <?= old('tablet_id') == $t['id'] ? 'selected' : '' ?>>
                                 <?= e($t['brand_name']) ?> <?= e($t['name']) ?>
@@ -101,7 +105,7 @@ $flash = flashMessage();
                 </div>
                 
                 <div class="form-group">
-                    <label>Your Name (optional)</label>
+                    <label>Your name (optional)</label>
                     <input type="text" name="nickname" value="<?= e(old('nickname')) ?>" placeholder="Anonymous">
                 </div>
                 
@@ -115,7 +119,7 @@ $flash = flashMessage();
                 </div>
                 
                 <div class="form-group">
-                    <label>Years Used</label>
+                    <label>Years used</label>
                     <input type="number" name="years_used" step="0.5" min="0" value="<?= e(old('years_used')) ?>">
                 </div>
                 
@@ -153,9 +157,9 @@ $flash = flashMessage();
                         <fieldset>
                             <legend><?= e(ucfirst(str_replace('_', ' ', $cat))) ?></legend>
                             <?php foreach ($items as $item): ?>
-                                <label>
+                                <label class="tooltip-trigger" data-tooltip="<?= e($item['description'] ?? '') ?>">
                                     <input type="checkbox" name="issues[]" value="<?= e($cat . '|' . $item['subcategory']) ?>">
-                                    <?= e($item['subcategory']) ?>
+                                    <span class="issue-label"><?= e(ucwords(str_replace('_', ' ', $item['subcategory']))) ?></span>
                                 </label>
                             <?php endforeach; ?>
                         </fieldset>
@@ -163,16 +167,16 @@ $flash = flashMessage();
                 </div>
                 
                 <div class="form-group">
-                    <label>What happened?</label>
+                    <label>What went wrong?</label>
                     <textarea name="failure_reason" rows="3"><?= e(old('failure_reason')) ?></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label>Additional comments</label>
+                    <label>Anything else?</label>
                     <textarea name="extra_comment" rows="2"><?= e(old('extra_comment')) ?></textarea>
                 </div>
                 
-                <button type="submit" class="button">Submit Report</button>
+                <button type="submit" class="button">Submit</button>
             </form>
         </article>
     </div>

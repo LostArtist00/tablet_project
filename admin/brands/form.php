@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 renderAdminHeader($id ? 'Edit Brand' : 'Add Brand');
 ?>
 <div class="container">
-    <h1>Add Brand</h1>
+    <h1><?= $id ? 'Edit Brand' : 'Add Brand' ?></h1>
     <?php if (isset($_SESSION['flash'])): ?>
         <p class="form-error"><?= e($_SESSION['flash']) ?></p>
     <?php endif; ?>

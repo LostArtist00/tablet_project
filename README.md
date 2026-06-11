@@ -1,6 +1,6 @@
-# Tablet Survey Project
+# Tablet Survey
 
-A PHP/MySQL web application for tracking graphics tablet reliability and failure reports.
+Track graphics tablet reliability with user-submitted failure reports.
 
 ## Requirements
 

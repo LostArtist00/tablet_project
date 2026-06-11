@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 require_once __DIR__ . '/app/config/init.php';
 require_once APP_PATH . '/includes/header.php';
 require_once APP_PATH . '/includes/footer.php';
@@ -14,14 +12,14 @@ renderHeader('About', '');
             <article class="panel">
                 <p class="eyebrow">About</p>
                 <h2>Tablet Survey</h2>
-                <p>Tablet Survey is a community-driven platform for tracking graphics tablet reliability and failure data. Users submit reports about their tablet experiences to help others make informed decisions.</p>
+                <p>Collects real-world reliability data for graphics tablets. People submit reports about their own tablets so others can see what actually breaks.</p>
                 <p>Supported brands include Wacom, Huion, XP-Pen, Xencelabs, Gaomon, and One by Wacom.</p>
             </article>
             <article class="panel">
                 <p class="eyebrow">How It Works</p>
                 <h2>Submit Reports</h2>
-                <p>Users can submit a report indicating whether their tablet is working, partially working, or broken. Reports include details like years used, failure reasons, and specific issues encountered.</p>
-                <p>This data helps track reliability patterns across different models and brands.</p>
+                <p>Say whether your tablet is working, on its way out, or dead. Reports include how many years you got out of it and what exactly went wrong.</p>
+                <p>Over time this helps spot which models hold up and which dont.</p>
             </article>
         </div>
     </div>

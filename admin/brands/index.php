@@ -13,8 +13,9 @@ $auth->requireAdmin();
 
 $brandModel = new Brand(db());
 
-if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $brandModel->delete((int) $_GET['delete']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
+    requireCsrfToken();
+    $brandModel->delete((int) $_POST['delete']);
     setFlash('Brand deleted.');
     redirect('admin/brands/index.php');
 }
@@ -43,7 +44,11 @@ renderAdminHeader('Brands');
                     <td><?= e($brand['name']) ?></td>
                     <td>
                         <a href="form.php?id=<?= (int) $brand['id'] ?>">Edit</a> |
-                        <a href="index.php?delete=<?= (int) $brand['id'] ?>" onclick="return confirm('Delete?')">Delete</a>
+                        <form method="post" style="display:inline" onsubmit="return confirm('Delete this brand?')">
+                            <?= csrfField() ?>
+                            <input type="hidden" name="delete" value="<?= (int) $brand['id'] ?>">
+                            <button type="submit" style="background:none;border:none;color:inherit;cursor:pointer;padding:0;font:inherit;text-decoration:underline">Delete</button>
+                        </form>
                     </td>
                 </tr>
             <?php endforeach; ?>

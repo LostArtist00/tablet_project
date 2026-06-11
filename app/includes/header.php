@@ -17,7 +17,7 @@ function renderHeader(string $title, string $active = ''): void
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title><?= e($title) ?> | Tablet Survey</title>
-        <meta name="description" content="Tablet Survey is a graphics tablet reliability database built around repair stories, failure trends, and hard-earned user data.">
+        <meta name="description" content="Graphics tablet reliability database. Repair stories, failure trends, and real user data.">
         <link rel="stylesheet" href="<?= e(asset('css/style.css')) ?>?v=<?= (int) filemtime(APP_PATH . '/assets/css/style.css') ?>">
     </head>
     <body>
@@ -27,7 +27,7 @@ function renderHeader(string $title, string $active = ''): void
                 <span class="brandmark-logo">TS</span>
                 <span>
                     <strong>Tablet Survey</strong>
-                    <small>data dont lie</small>
+                    <small>real reports, real owners</small>
                 </span>
             </a>
 

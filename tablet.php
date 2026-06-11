@@ -63,7 +63,10 @@ renderHeader(e($tablet['brand_name'] . ' ' . $tablet['name']), '');
                 </div>
 
                 <p><strong>Price:</strong> $<?= e($tablet['price']) ?></p>
-                <p><strong>Connection:</strong> <?= e($tablet['connection_type']) ?></p>
+                <p><strong>Connection:</strong> <?= e($tablet['connection_type'] ?: 'N/A') ?></p>
+                <?php if ($tablet['has_display'] && $tablet['display_resolution']): ?>
+                    <p><strong>Display:</strong> <?= e($tablet['display_resolution']) ?></p>
+                <?php endif; ?>
                 <p><?= e($tablet['notes']) ?></p>
             </div>
         </article>
@@ -71,7 +74,7 @@ renderHeader(e($tablet['brand_name'] . ' ' . $tablet['name']), '');
         <div class="stats-grid">
             <div class="stat-card">
                 <strong><?= (int) ($stats['total_reports'] ?? 0) ?></strong>
-                <span>total reports</span>
+                <span>reports</span>
             </div>
             <div class="stat-card">
                 <strong><?= (int) ($stats['working'] ?? 0) ?></strong>

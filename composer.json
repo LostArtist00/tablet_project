@@ -1,4 +1,6 @@
 {
+    "name": "user/tablet-survey",
+    "description": "Graphics tablet reliability database",
     "autoload": {
         "psr-4": {
             "App\\": "app/"

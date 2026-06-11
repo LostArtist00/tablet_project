@@ -13,8 +13,9 @@ $auth->requireAdmin();
 
 $reportModel = new FailureReport(db());
 
-if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $reportModel->delete((int) $_GET['delete']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
+    requireCsrfToken();
+    $reportModel->delete((int) $_POST['delete']);
     setFlash('Report deleted.');
     redirect('admin/reports/index.php');
 }
@@ -48,7 +49,11 @@ renderAdminHeader('Reports');
                     <td><?= e($report['years_used']) ?></td>
                     <td><?= date('M j, Y', strtotime($report['created_at'])) ?></td>
                     <td>
-                        <a href="index.php?delete=<?= (int) $report['id'] ?>" onclick="return confirm('Delete?')">Delete</a>
+                        <form method="post" style="display:inline" onsubmit="return confirm('Delete this report?')">
+                            <?= csrfField() ?>
+                            <input type="hidden" name="delete" value="<?= (int) $report['id'] ?>">
+                            <button type="submit" style="background:none;border:none;color:inherit;cursor:pointer;padding:0;font:inherit;text-decoration:underline">Delete</button>
+                        </form>
                     </td>
                 </tr>
             <?php endforeach; ?>

@@ -12,7 +12,7 @@ require_once APP_PATH . '/includes/footer.php';
 $tabletModel = new Tablet(db());
 $brandModel = new Brand(db());
 
-$tablets = $tabletModel->all();
+$tablets = $tabletModel->allWithStats();
 $brands = $brandModel->all();
 
 renderHeader('Browse Tablets', 'tablets.php');
@@ -21,14 +21,14 @@ renderHeader('Browse Tablets', 'tablets.php');
     <div class="container">
         <div class="flex-between">
             <div>
-                <p class="eyebrow">Database</p>
-                <h1>Tablet Models</h1>
+                <p class="eyebrow">Browse</p>
+                <h1>All Models</h1>
             </div>
         </div>
 
         <div class="tablet-filters">
             <div class="tablet-filter-group">
-                <span class="eyebrow tablet-filter-label">Filter by Brand</span>
+                <span class="eyebrow tablet-filter-label">Brand</span>
                 <div class="checkbox-grid" id="brandFilters">
                     <?php foreach ($brands as $brand): ?>
                         <label class="checkbox">
@@ -39,7 +39,7 @@ renderHeader('Browse Tablets', 'tablets.php');
                 </div>
             </div>
             <div class="tablet-filter-group">
-                <span class="eyebrow tablet-filter-label">Filter by Type</span>
+                <span class="eyebrow tablet-filter-label">Type</span>
                 <div class="meta tablet-type-options">
                     <label class="pill">
                         <input type="radio" data-filter="type" value="" name="galleryType" checked hidden> All
@@ -48,11 +48,11 @@ renderHeader('Browse Tablets', 'tablets.php');
                         <input type="radio" data-filter="type" value="display" name="galleryType" hidden> Display
                     </label>
                     <label class="pill">
-                        <input type="radio" data-filter="type" value="graphics" name="galleryType" hidden> Graphics
+                        <input type="radio" data-filter="type" value="graphics" name="galleryType" hidden> No Display
                     </label>
                 </div>
             </div>
-            <input type="search" id="gallerySearch" class="gallery-search" placeholder="Search tablets..." autocomplete="off">
+            <input type="search" id="gallerySearch" class="gallery-search" placeholder="Search..." autocomplete="off">
         </div>
 
         <div class="card-grid" id="galleryGrid">
@@ -61,20 +61,32 @@ renderHeader('Browse Tablets', 'tablets.php');
                     data-brand="<?= (int) $t['brand_id'] ?>"
                     data-type="<?= $t['has_display'] ? 'display' : 'graphics' ?>"
                     data-name="<?= e(strtolower($t['brand_name'] . ' ' . $t['name'])) ?>">
-                    <div class="surface-image tablet-card__image" style="<?= $t['image_path'] ? 'background:var(--surface);padding:0;overflow:hidden;' : '' ?>">
+                    <a class="surface-image tablet-card__image" href="<?= e(url('tablet.php')) ?>?id=<?= (int) $t['id'] ?>" style="<?= $t['image_path'] ? 'position:relative;background:var(--surface);padding:0;overflow:hidden;' : '' ?>">
                         <?php if ($t['image_path']): ?>
-                            <img src="<?= e(uploadUrl($t['image_path'])) ?>" alt="<?= e($t['brand_name']) ?> <?= e($t['name']) ?>" style="width:100%;height:100%;object-fit:contain;object-position:<?= (int) ($t['image_pos_x'] ?? 50) ?>% <?= (int) ($t['image_pos_y'] ?? 50) ?>%;display:block;background:#fff;">
+                            <img src="<?= e(uploadUrl($t['image_path'])) ?>" alt="<?= e($t['brand_name']) ?> <?= e($t['name']) ?>" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:<?= (int) ($t['image_pos_x'] ?? 50) ?>% <?= (int) ($t['image_pos_y'] ?? 50) ?>%;background:#fff;">
                         <?php else: ?>
                             <?= e($t['brand_name']) ?> / <?= e($t['name']) ?>
                         <?php endif; ?>
-                    </div>
+                    </a>
                     <h3><?= e($t['brand_name']) ?> <?= e($t['name']) ?></h3>
                     <div class="meta tablet-card__meta">
                         <span class="pill"><?= $t['has_display'] ? 'Display' : 'Pen tablet' ?></span>
                         <span class="pill"><?= e($t['size'] ?: 'N/A') ?></span>
+                        <?php if ($t['connection_type']): ?>
+                            <span class="pill"><?= e($t['connection_type']) ?></span>
+                        <?php endif; ?>
                     </div>
                     <p class="muted"><?= e($t['notes'] ?: '') ?></p>
-                    <a class="button secondary" href="<?= e(url('tablet.php')) ?>?id=<?= (int) $t['id'] ?>">View details</a>
+                    <p class="muted tablet-card__stats">
+                        <?= (int) $t['total_reports'] ?> report<?= (int) $t['total_reports'] !== 1 ? 's' : '' ?>
+                        <?php if ((float) $t['avg_years_working'] > 0): ?>
+                            · Working avg: <?= e($t['avg_years_working']) ?> yrs
+                        <?php endif; ?>
+                        <?php if ((float) $t['avg_years_fault'] > 0): ?>
+                            · Fault avg: <?= e($t['avg_years_fault']) ?> yrs
+                        <?php endif; ?>
+                    </p>
+                    <a class="button secondary" href="<?= e(url('tablet.php')) ?>?id=<?= (int) $t['id'] ?>">Details</a>
                 </article>
             <?php endforeach; ?>
             <div class="empty-state" style="display:none;">

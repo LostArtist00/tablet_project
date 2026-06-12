@@ -33,7 +33,8 @@ class Database
                 ]
             );
         } catch (\PDOException $e) {
-            die('<div style="padding:20px;background:#ffebe9;border:1px solid #ffcccc;font-family:sans-serif;"><h2>Database Connection Error</h2><p><strong>Message:</strong> ' . htmlspecialchars($e->getMessage()) . '</p><p><strong>Check:</strong></p><ul><li>MySQL service is running</li><li>Database "tablet_survey" exists</li><li>Credentials are correct</li></ul></div>');
+            Helper::log('DB connection failed: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+            throw $e;
         }
 
         return self::$connection;

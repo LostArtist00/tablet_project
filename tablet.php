@@ -84,6 +84,14 @@ renderHeader(e($tablet['brand_name'] . ' ' . $tablet['name']), '');
                 <strong><?= (int) ($stats['broken'] ?? 0) ?></strong>
                 <span>broken</span>
             </div>
+            <div class="stat-card">
+                <strong><?= e(number_format((float) ($stats['avg_years_working'] ?? 0), 1)) ?></strong>
+                <span>avg working yrs</span>
+            </div>
+            <div class="stat-card">
+                <strong><?= e(number_format((float) ($stats['avg_years_broken'] ?? 0), 1)) ?></strong>
+                <span>avg fault yrs</span>
+            </div>
         </div>
 
         <h2>Reports (<?= count($reports) ?>)</h2>

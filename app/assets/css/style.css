@@ -591,8 +591,9 @@ textarea {
 }
 
 .tablet-detail + .stats-grid {
-    width: min(720px, 100%);
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: min(940px, 100%);
+    margin: 1.5rem 0 2rem;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .tablet-report-card {
